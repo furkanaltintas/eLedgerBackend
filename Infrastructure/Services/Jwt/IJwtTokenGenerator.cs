@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Infrastructure.Configurations;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Services.Jwt;
 
 public interface IJwtTokenGenerator
 {

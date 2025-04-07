@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Services.Jwt;
 
 public class JwtTokenGenerator : IJwtTokenGenerator
 {
@@ -37,9 +37,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             signingCredentials: signingCredentials);
 
         JwtSecurityTokenHandler handler = new();
-        String token = handler.WriteToken(securityToken);
+        string token = handler.WriteToken(securityToken);
 
-        String refreshToken = Guid.NewGuid().ToString();
+        string refreshToken = Guid.NewGuid().ToString();
         DateTime refreshTokenExpires = expires.AddHours(1);
 
         user.RefreshToken = refreshToken;
@@ -61,10 +61,6 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new("Companies", JsonSerializer.Serialize(companies)),
             new("CompanyId", companyId.ToString() ?? string.Empty),
         };
-
-        // Kullanıcının rollerini ekle
-        //IList<string>? roles = await _userManager.GetRolesAsync(user);
-        //claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         return claims;
     }
