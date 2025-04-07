@@ -2,13 +2,15 @@
 using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
+using Infrastructure.Services.Cache;
 using MediatR;
 
 namespace Application.Features.Companies.DeleteCompany;
 
 class DeleteCompanyCommandHandler(
     ICompanyRepository companyRepository,
-    IUnitOfWork unitOfWork) : IRequestHandler<DeleteCompanyCommand, IDomainResult<string>>
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService) : IRequestHandler<DeleteCompanyCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
     {
@@ -17,6 +19,9 @@ class DeleteCompanyCommandHandler(
 
         company.IsDeleted = true;
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        cacheService.Remove("companies");
+
         return DomainResult.Success("Şirket başarıyla silindi");
     }
 }

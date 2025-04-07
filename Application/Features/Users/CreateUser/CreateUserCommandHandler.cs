@@ -2,11 +2,11 @@
 using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
+using Infrastructure.Services.Cache;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Application.Features.Users.CreateUser;
 
@@ -14,6 +14,7 @@ class CreateUserCommandHandler(
     UserManager<AppUser> userManager,
     ICompanyUserRepository companyUserRepository,
     IUnitOfWork unitOfWork,
+    ICacheService cacheService,
     IMapper mapper) : IRequestHandler<CreateUserCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -27,6 +28,8 @@ class CreateUserCommandHandler(
         if (!identityResult.Succeeded) return DomainResult<string>.Failed(identityResult.Errors.Select(e => e.Description).ToList());
 
         await CompanyUsersAsync(request, user, cancellationToken);
+
+        cacheService.Remove("users");
 
         return DomainResult.Success("Kullanıcı başarıyla oluşturuldu");
     }

@@ -10,4 +10,5 @@ public record UpdateUserCommand(
     string UserName,
     string Email,
     string? Password,
-    List<string> CompanyIds) : IRequest<IDomainResult<string>>;
+    List<string> CompanyIds,
+    bool IsAdmin) : IRequest<IDomainResult<string>>;

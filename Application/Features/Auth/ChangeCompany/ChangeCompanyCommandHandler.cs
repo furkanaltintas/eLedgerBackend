@@ -2,7 +2,7 @@
 using Domain.Interfaces;
 using DomainResults.Common;
 using Infrastructure.Configurations;
-using Infrastructure.Services;
+using Infrastructure.Services.Jwt;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

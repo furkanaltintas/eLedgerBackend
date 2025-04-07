@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
+using Infrastructure.Services;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,7 @@ class UpdateUserCommandHandler(
     UserManager<AppUser> userManager,
     ICompanyUserRepository companyUserRepository,
     IUnitOfWork unitOfWork,
+    ICacheService cacheService,
     IMapper mapper) : IRequestHandler<UpdateUserCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -63,6 +65,8 @@ class UpdateUserCommandHandler(
             await companyUserRepository.AddRangeAsync(companyUsers);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
+
+        cacheService.Remove("users");
 
         return DomainResult.Success("User updated successfully");
     }

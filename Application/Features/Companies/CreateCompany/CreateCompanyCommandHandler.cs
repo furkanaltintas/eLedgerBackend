@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
+using Infrastructure.Services.Cache;
 using MapsterMapper;
 using MediatR;
 
@@ -10,6 +11,7 @@ namespace Application.Features.Companies.CreateCompany;
 class CreateCompanyCommandHandler(
     ICompanyRepository companyRepository,
     IUnitOfWork unitOfWork,
+    ICacheService cacheService,
     IMapper mapper) : IRequestHandler<CreateCompanyCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
@@ -20,6 +22,9 @@ class CreateCompanyCommandHandler(
         Company company = mapper.Map<Company>(request);
         await companyRepository.AddAsync(company, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        cacheService.Remove("companies");
+
         return DomainResult.Success("Şirket başarıyla oluşturuldu");
     }
 }
