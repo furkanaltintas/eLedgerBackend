@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Services.Cache;
 using Infrastructure.Services.Jwt;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 
 namespace Infrastructure;
 
@@ -11,7 +10,6 @@ public static class DependencyInjection
     {
         // Redis ayarı
         // services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect("localhost"));
-
 
         services.AddMemoryCache();
         services.AddScoped<ICacheService, MemoryCacheService>();
