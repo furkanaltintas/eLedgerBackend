@@ -16,7 +16,7 @@ class GetAllUsersQueryHandler(
         List<AppUser> users;
 
         users = cacheService.Get<List<AppUser>>("users");
-        if(users is null)
+        if (users is null)
         {
             users = await userManager.Users
                 .Include(u => u.CompanyUsers)!
