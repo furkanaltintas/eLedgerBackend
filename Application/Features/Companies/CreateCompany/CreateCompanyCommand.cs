@@ -9,4 +9,4 @@ public record CreateCompanyCommand(
     string FullAddress,
     string TaxDepartment,
     string TaxNumber,
-    Database Database): IRequest<IDomainResult<string>>;
+    Database Database) : IRequest<IDomainResult<string>>;

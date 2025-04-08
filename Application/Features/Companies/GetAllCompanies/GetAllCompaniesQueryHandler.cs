@@ -16,7 +16,7 @@ class GetAllCompaniesQueryHandler(
         List<Company> companies;
 
         companies = cacheService.Get<List<Company>>("companies");
-        if(companies is null)
+        if (companies is null)
         {
             companies = await companyRepository
                 .GetAll()

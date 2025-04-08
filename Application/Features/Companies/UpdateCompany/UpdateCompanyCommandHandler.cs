@@ -17,9 +17,9 @@ class UpdateCompanyCommandHandler(
     public async Task<IDomainResult<string>> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
     {
         Company company = await companyRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.Id, cancellationToken);
-        if(company is null) return DomainResult.NotFound<string>("Şirket bulunamadı");
+        if (company is null) return DomainResult.NotFound<string>("Şirket bulunamadı");
 
-        if(company.TaxNumber != request.TaxNumber)
+        if (company.TaxNumber != request.TaxNumber)
         {
             Boolean isTaxNumberExists = await companyRepository.AnyAsync(c => c.TaxNumber == request.TaxNumber, cancellationToken);
             if (isTaxNumberExists) return DomainResult.Conflict<string>("Bu vergi numarasına sahip başka bir şirket bulunmaktadır");
