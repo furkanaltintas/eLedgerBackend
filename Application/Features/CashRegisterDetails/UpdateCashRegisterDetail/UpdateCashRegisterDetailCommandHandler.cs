@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
+﻿using Application.Interfaces;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
-using Infrastructure.Services.Cache;
 using MediatR;
 
 namespace Application.Features.CashRegisterDetails.UpdateCashRegisterDetail;
@@ -10,7 +10,7 @@ class UpdateCashRegisterDetailCommandHandler(
     ICashRegisterRepository cashRegisterRepository,
     ICashRegisterDetailRepository cashRegisterDetailRepository,
     IUnitOfWorkCompany unitOfWorkCompany,
-    ICacheService cacheService) : IRequestHandler<UpdateCashRegisterDetailCommand, IDomainResult<string>>
+    ICompanyContextHelper companyContextHelper) : IRequestHandler<UpdateCashRegisterDetailCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(UpdateCashRegisterDetailCommand request, CancellationToken cancellationToken)
     {
@@ -34,7 +34,7 @@ class UpdateCashRegisterDetailCommandHandler(
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
-        cacheService.Remove("cashRegisters");
+        companyContextHelper.RemoveCompanyFromContext("cashRegisters");
 
         return DomainResult.Success("Kasa hareketi başarıyla güncellendi");
     }
