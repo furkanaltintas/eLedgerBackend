@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Application.Features.CashRegisters.DeleteCashRegister;
 
-public record DeleteCashRegisterCommand(Guid Id): IRequest<IDomainResult<string>>;
+public record DeleteCashRegisterCommand(Guid Id) : IRequest<IDomainResult<string>>;

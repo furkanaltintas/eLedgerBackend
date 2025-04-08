@@ -6,4 +6,4 @@ namespace Application.Features.CashRegisters.UpdateCashRegister;
 public record UpdateCashRegisterCommand(
     Guid Id,
     string Name,
-    int TypeValue) : IRequest<IDomainResult<string>>;
+    int CurrencyTypeValue) : IRequest<IDomainResult<string>>;
