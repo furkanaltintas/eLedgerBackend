@@ -1,7 +1,7 @@
-using Scalar.AspNetCore;
+using Application;
 using Infrastructure;
 using Persistence;
-using Application;
+using Scalar.AspNetCore;
 using WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);

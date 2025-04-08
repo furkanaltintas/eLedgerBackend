@@ -1,10 +1,10 @@
 ﻿using Application.Features.CashRegisterDetails.CreateCashRegisterDetail;
-using Application.Features.CashRegisterDetails.GetAllCashRegisterDetails;
 using Application.Features.CashRegisterDetails.DeleteCashRegisterDetail;
+using Application.Features.CashRegisterDetails.GetAllCashRegisterDetails;
 using Application.Features.CashRegisterDetails.UpdateCashRegisterDetail;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;
-using MediatR;
 
 namespace WebAPI.Controllers;
 

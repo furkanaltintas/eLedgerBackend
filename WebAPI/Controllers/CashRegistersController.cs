@@ -2,9 +2,9 @@
 using Application.Features.CashRegisters.DeleteCashRegister;
 using Application.Features.CashRegisters.GetAllCashRegisters;
 using Application.Features.CashRegisters.UpdateCashRegister;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;
-using MediatR;
 
 namespace WebAPI.Controllers;
 

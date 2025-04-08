@@ -11,7 +11,7 @@ namespace WebAPI.Controllers;
 public class AuthController : ApiController
 {
     public AuthController(IMediator mediator) : base(mediator) { }
-    
+
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Login(LoginCommand loginCommand) =>
