@@ -1,7 +1,10 @@
-﻿using Application.Mapping;
+﻿using Application.Helpers;
+using Application.Interfaces;
+using Application.Mapping;
 using Domain.Entities;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -12,6 +15,9 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         Assembly assembly = Assembly.GetExecutingAssembly();
+
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddScoped<ICompanyContextHelper, CompanyContextHelper>();
 
         #region Mapper
         TypeAdapterConfig config = TypeAdapterConfig.GlobalSettings;

@@ -17,7 +17,7 @@ class LoginByCompanyCommandHandler(
     public async Task<IDomainResult<LoginCommandResponse>> Handle(LoginByCompanyCommand request, CancellationToken cancellationToken)
     {
         AppUser? user = await userManager.FindByIdAsync(request.UserId);
-        if(user is null) return DomainResult<LoginCommandResponse>.NotFound("User not found");
+        if (user is null) return DomainResult<LoginCommandResponse>.NotFound("User not found");
 
         List<Company> companies = await companyUserRepository
             .Where(c => c.AppUserId == Guid.Parse(request.UserId))
