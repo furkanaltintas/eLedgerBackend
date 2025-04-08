@@ -12,8 +12,7 @@ namespace Persistence.Context
         public AppDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<Bank> Banks { get; set; }
-        public DbSet<BankDetail> BankDetails { get; set; }
+
         public DbSet<Company> Companies { get; set; }
         public DbSet<CompanyUser> CompanyUsers { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -36,18 +35,9 @@ namespace Persistence.Context
 
 
 
-            #region Bank
-            builder.Entity<Bank>().Property(p => p.DepositAmount).HasColumnType("money");
-            builder.Entity<Bank>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-            builder.Entity<Bank>().Property(p => p.CurrencyType).HasConversion(type => type.Value, value => CurrencyTypeEnum.FromValue(value));
-            builder.Entity<Bank>().HasQueryFilter(filter => !filter.IsDeleted);
-            builder.Entity<Bank>().HasMany(p => p.Details).WithOne().HasForeignKey(p => p.BankId);
-            #endregion
 
-            #region BankDetail
-            builder.Entity<BankDetail>().Property(p => p.DepositAmount).HasColumnType("money");
-            builder.Entity<BankDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-            #endregion
+
+
 
             #region Customer
             builder.Entity<Customer>().Property(p => p.DepositAmount).HasColumnType("money");

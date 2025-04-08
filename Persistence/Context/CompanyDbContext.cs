@@ -31,6 +31,19 @@ public class CompanyDbContext : DbContext, IUnitOfWorkCompany
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        #region Bank
+        builder.Entity<Bank>().Property(p => p.DepositAmount).HasColumnType("money");
+        builder.Entity<Bank>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        builder.Entity<Bank>().Property(p => p.CurrencyType).HasConversion(type => type.Value, value => CurrencyTypeEnum.FromValue(value));
+        builder.Entity<Bank>().HasQueryFilter(filter => !filter.IsDeleted);
+        builder.Entity<Bank>().HasMany(p => p.Details).WithOne().HasForeignKey(p => p.BankId);
+        #endregion
+
+        #region BankDetail
+        builder.Entity<BankDetail>().Property(p => p.DepositAmount).HasColumnType("money");
+        builder.Entity<BankDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        #endregion
+
         #region CashRegister
         builder.Entity<CashRegister>().Property(p => p.DepositAmount).HasColumnType("money");
         builder.Entity<CashRegister>().Property(p => p.WithdrawalAmount).HasColumnType("money");
@@ -46,6 +59,8 @@ public class CompanyDbContext : DbContext, IUnitOfWorkCompany
         #endregion
     }
 
+    public DbSet<Bank> Banks { get; set; }
+    public DbSet<BankDetail> BankDetails { get; set; }
     public DbSet<CashRegister> CashRegisters { get; set; }
     public DbSet<CashRegisterDetail> CashRegisterDetails { get; set; }
 

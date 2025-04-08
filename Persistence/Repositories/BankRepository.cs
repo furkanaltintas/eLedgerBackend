@@ -5,7 +5,7 @@ using Persistence.Context;
 
 namespace Persistence.Repositories;
 
-class BankRepository : Repository<Bank, AppDbContext>, IBankRepository
+class BankRepository : Repository<Bank, CompanyDbContext>, IBankRepository
 {
-    public BankRepository(AppDbContext context) : base(context) { }
+    public BankRepository(CompanyDbContext context) : base(context) { }
 }
