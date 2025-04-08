@@ -14,8 +14,6 @@ namespace Persistence.Context
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Bank> Banks { get; set; }
         public DbSet<BankDetail> BankDetails { get; set; }
-        public DbSet<CashRegister> CashRegisters { get; set; }
-        public DbSet<CashRegisterDetail> CashRegisterDetails { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<CompanyUser> CompanyUsers { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -36,35 +34,14 @@ namespace Persistence.Context
             builder.Ignore<IdentityUserRole<Guid>>();
             builder.Ignore<IdentityUserClaim<Guid>>();
 
-            #region CashRegister
-            builder.Entity<CashRegister>().Property(p => p.DepositAmount).HasColumnType("money");
-            builder.Entity<CashRegister>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-            builder.Entity<CashRegister>()
-                .Property(p => p.CurrencyType)
-                .HasConversion(type => type.Value, value => CurrencyTypeEnum.FromValue(value));
-            builder.Entity<CashRegister>().HasQueryFilter(filter => !filter.IsDeleted);
-            builder.Entity<CashRegister>()
-                .HasMany(p => p.Details)
-                .WithOne()
-                .HasForeignKey(p => p.CashRegisterId);
-            #endregion
 
-            #region CashRegisterDetail
-            builder.Entity<CashRegisterDetail>().Property(p => p.DepositAmount).HasColumnType("money");
-            builder.Entity<CashRegisterDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-            #endregion
 
             #region Bank
             builder.Entity<Bank>().Property(p => p.DepositAmount).HasColumnType("money");
             builder.Entity<Bank>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-            builder.Entity<Bank>()
-                .Property(p => p.CurrencyType)
-                .HasConversion(type => type.Value, value => CurrencyTypeEnum.FromValue(value));
+            builder.Entity<Bank>().Property(p => p.CurrencyType).HasConversion(type => type.Value, value => CurrencyTypeEnum.FromValue(value));
             builder.Entity<Bank>().HasQueryFilter(filter => !filter.IsDeleted);
-            builder.Entity<Bank>()
-               .HasMany(p => p.Details)
-               .WithOne()
-               .HasForeignKey(p => p.BankId);
+            builder.Entity<Bank>().HasMany(p => p.Details).WithOne().HasForeignKey(p => p.BankId);
             #endregion
 
             #region BankDetail
@@ -75,16 +52,14 @@ namespace Persistence.Context
             #region Customer
             builder.Entity<Customer>().Property(p => p.DepositAmount).HasColumnType("money");
             builder.Entity<Customer>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-            builder.Entity<Customer>().Property(p => p.Type)
-                .HasConversion(type => type.Value, value => CustomerTypeEnum.FromValue(value));
+            builder.Entity<Customer>().Property(p => p.Type).HasConversion(type => type.Value, value => CustomerTypeEnum.FromValue(value));
             builder.Entity<Customer>().HasQueryFilter(filter => !filter.IsDeleted);
             #endregion
 
             #region CustomerDetail
             builder.Entity<CustomerDetail>().Property(p => p.DepositAmount).HasColumnType("money");
             builder.Entity<CustomerDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-            builder.Entity<CustomerDetail>().Property(p => p.Type)
-               .HasConversion(type => type.Value, value => CustomerDetailTypeEnum.FromValue(value));
+            builder.Entity<CustomerDetail>().Property(p => p.Type).HasConversion(type => type.Value, value => CustomerDetailTypeEnum.FromValue(value));
             #endregion
 
             #region ProductDetail
@@ -101,8 +76,7 @@ namespace Persistence.Context
 
             #region Invoice
             builder.Entity<Invoice>().Property(p => p.Amount).HasColumnType("money");
-            builder.Entity<Invoice>().Property(p => p.Type)
-                .HasConversion(type => type.Value, value => InvoiceTypeEnum.FromValue(value));
+            builder.Entity<Invoice>().Property(p => p.Type).HasConversion(type => type.Value, value => InvoiceTypeEnum.FromValue(value));
             builder.Entity<Invoice>().HasQueryFilter(filter => !filter.IsDeleted);
             builder.Entity<Invoice>().HasQueryFilter(filter => !filter.Customer!.IsDeleted);
             #endregion

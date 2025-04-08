@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
 using Infrastructure.Services;
+using Infrastructure.Services.Cache;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

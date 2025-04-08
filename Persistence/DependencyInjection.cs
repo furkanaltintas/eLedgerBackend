@@ -47,6 +47,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IBankDetailRepository, BankDetailRepository>();
         services.AddScoped<IBankRepository, BankRepository>();
+        services.AddScoped<ICashRegisterRepository, CashRegisterRepository>();
         services.AddScoped<ICashRegisterDetailRepository, CashRegisterDetailRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<ICompanyUserRepository, CompanyUserRepository>();

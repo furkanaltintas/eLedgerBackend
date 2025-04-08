@@ -5,7 +5,7 @@ using Persistence.Context;
 
 namespace Persistence.Repositories;
 
-class CashRegisterDetailRepository : Repository<CashRegisterDetail, AppDbContext>, ICashRegisterDetailRepository
+class CashRegisterDetailRepository : Repository<CashRegisterDetail, CompanyDbContext>, ICashRegisterDetailRepository
 {
-    public CashRegisterDetailRepository(AppDbContext context) : base(context) { }
+    public CashRegisterDetailRepository(CompanyDbContext context) : base(context) { }
 }

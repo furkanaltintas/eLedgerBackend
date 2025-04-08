@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using Domain.ValueObjects;
 using Microsoft.AspNetCore.Http;
@@ -22,15 +23,36 @@ public class CompanyDbContext : DbContext, IUnitOfWorkCompany
     }
 
 
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(connectionString);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        
+        #region CashRegister
+        builder.Entity<CashRegister>().Property(p => p.DepositAmount).HasColumnType("money");
+        builder.Entity<CashRegister>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        builder.Entity<CashRegister>().Property(p => p.CurrencyType).HasConversion(type => type.Value, value => CurrencyTypeEnum.FromValue(value));
+        builder.Entity<CashRegister>().HasQueryFilter(filter => !filter.IsDeleted);
+        builder.Entity<CashRegister>().HasMany(p => p.Details).WithOne().HasForeignKey(p => p.CashRegisterId);
+        #endregion
+
+        #region CashRegisterDetail
+        builder.Entity<CashRegisterDetail>().Property(p => p.DepositAmount).HasColumnType("money");
+        builder.Entity<CashRegisterDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        builder.Entity<CashRegister>().HasQueryFilter(filter => !filter.IsDeleted);
+        #endregion
     }
+
+    public DbSet<CashRegister> CashRegisters { get; set; }
+    public DbSet<CashRegisterDetail> CashRegisterDetails { get; set; }
+
+
+
+
+
 
 
 

@@ -1,5 +1,7 @@
-﻿using Domain.Entities;
+﻿using Application.Mapping;
+using Domain.Entities;
 using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -11,10 +13,17 @@ public static class DependencyInjection
     {
         Assembly assembly = Assembly.GetExecutingAssembly();
 
-        services.AddMapster();
+        #region Mapper
+        TypeAdapterConfig config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(SourceToDestinationMapping).Assembly); // Mapping class'larını tara
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
+        #endregion
 
+        #region MediatR
         services.AddMediatR(configuration =>
         { configuration.RegisterServicesFromAssemblies(assembly, typeof(AppUser).Assembly); });
+        #endregion
 
         return services;
     }
