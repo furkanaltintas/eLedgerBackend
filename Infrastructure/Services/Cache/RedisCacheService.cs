@@ -7,18 +7,15 @@ class RedisCacheService : ICacheService
 {
     private readonly IDatabase _database;
 
-    public RedisCacheService(IConnectionMultiplexer connection)
-    {
-        _database = connection.GetDatabase();
-    }
+    public RedisCacheService(IConnectionMultiplexer connection) => _database = connection.GetDatabase();
 
     public T Get<T>(string key)
     {
-        RedisValue value = _database.StringGet(key);
+        RedisValue? value = _database.StringGet(key);
         if (value.HasValue)
-            return JsonConvert.DeserializeObject<T>(value);
+            return JsonConvert.DeserializeObject<T>(value!)!;
         else
-            return default(T);
+            return default!;
     }
 
     public bool Remove(string key)

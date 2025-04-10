@@ -2,6 +2,8 @@
 using Application.Features.Banks.UpdateBank;
 using Application.Features.CashRegisters.CreateCashRegister;
 using Application.Features.CashRegisters.UpdateCashRegister;
+using Application.Features.Customers.CreateCustomer;
+using Application.Features.Customers.UpdateCustomer;
 using Domain.Entities;
 using Domain.Enums;
 using Mapster;
@@ -23,5 +25,12 @@ public class SourceToDestinationMapping : IRegister
 
         config.NewConfig<UpdateBankCommand, Bank>()
             .Map(dest => dest.CurrencyType, src => CurrencyTypeEnum.FromValue(src.CurrencyTypeValue));
+
+
+        config.NewConfig<CreateCustomerCommand, Customer>()
+            .Map(dest => dest.Type, src => CustomerTypeEnum.FromValue(src.TypeValue));
+
+        config.NewConfig<UpdateCustomerCommand, Customer>()
+            .Map(dest => dest.Type, src => CustomerTypeEnum.FromValue(src.TypeValue));
     }
 }

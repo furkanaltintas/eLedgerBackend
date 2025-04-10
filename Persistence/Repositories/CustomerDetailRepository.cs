@@ -5,7 +5,7 @@ using Persistence.Context;
 
 namespace Persistence.Repositories;
 
-class CustomerDetailRepository : Repository<CustomerDetail, AppDbContext>, ICustomerDetailRepository
+class CustomerDetailRepository : Repository<CustomerDetail, CompanyDbContext>, ICustomerDetailRepository
 {
-    public CustomerDetailRepository(AppDbContext context) : base(context) { }
+    public CustomerDetailRepository(CompanyDbContext context) : base(context) { }
 }

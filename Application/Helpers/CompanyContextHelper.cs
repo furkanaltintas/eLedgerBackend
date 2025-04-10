@@ -21,6 +21,11 @@ internal class CompanyContextHelper(
         cacheService.Remove($"Company_{GetCompanyId()}-{name}");
     }
 
+    public void RemoveRangeCompanyFromContext(string[] names)
+    {
+        foreach (string name in names) cacheService.Remove($"Company_{GetCompanyId()}-{name}");
+    }
+
     public void SetCompanyInContext<T>(string name, T value)
     {
         cacheService.Set($"Company_{GetCompanyId()}-{name}", value, TimeSpan.FromHours(1));

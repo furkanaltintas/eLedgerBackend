@@ -34,7 +34,7 @@ class UpdateBankDetailCommandHandler(
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
-        companyContextHelper.RemoveCompanyFromContext("banks");
+        companyContextHelper.RemoveRangeCompanyFromContext(new[] { "banks", "cashRegisters" });
 
         return DomainResult.Success("Banka hareketi başarıyla güncellendi");
     }

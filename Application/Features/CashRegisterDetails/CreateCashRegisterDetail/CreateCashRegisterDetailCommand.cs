@@ -4,10 +4,12 @@ using MediatR;
 namespace Application.Features.CashRegisterDetails.CreateCashRegisterDetail;
 
 public record CreateCashRegisterDetailCommand(
-    Guid? OppositeCashRegisterId,
     Guid CashRegisterId,
     DateOnly Date,
     int Type,
     decimal Amount,
+    Guid? OppositeCashRegisterId,
+    Guid? OppositeBankId,
+    Guid? OppositeCustomerId,
     decimal OppositeAmount,
     string Description) : IRequest<IDomainResult<string>>;

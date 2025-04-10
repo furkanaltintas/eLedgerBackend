@@ -7,6 +7,10 @@ using MediatR;
 namespace Application.Features.CashRegisterDetails.DeleteCashRegisterDetail;
 
 class DeleteCashRegisterDetailCommandHandler(
+    ICustomerRepository customerRepository,
+    ICustomerDetailRepository customerDetailRepository,
+    IBankRepository bankRepository,
+    IBankDetailRepository bankDetailRepository,
     ICashRegisterRepository cashRegisterRepository,
     ICashRegisterDetailRepository cashRegisterDetailRepository,
     IUnitOfWorkCompany unitOfWorkCompany,
@@ -37,11 +41,39 @@ class DeleteCashRegisterDetailCommandHandler(
             cashRegisterDetailRepository.Delete(oppositeCashRegisterDetail);
         }
 
+        if (cashRegisterDetail.BankDetailId is not null)
+        {
+            BankDetail? oppositeBankDetail = await bankDetailRepository.GetByExpressionWithTrackingAsync(c => c.Id == cashRegisterDetail.BankDetailId, cancellationToken);
+            if (oppositeBankDetail is null) return DomainResult<string>.NotFound("Banka hareketi bulunamadı.");
+
+            Bank? oppositeBank = await bankRepository.GetByExpressionWithTrackingAsync(c => c.Id == oppositeBankDetail.BankId, cancellationToken);
+            if (oppositeBank is null) return DomainResult<string>.NotFound("Banka bulunamadı.");
+
+            oppositeBank.DepositAmount -= oppositeBankDetail.DepositAmount;
+            oppositeBank.WithdrawalAmount -= oppositeBankDetail.WithdrawalAmount;
+
+            bankDetailRepository.Delete(oppositeBankDetail);
+        }
+
+        if (cashRegisterDetail.CustomerDetailId is not null)
+        {
+            CustomerDetail? oppositeCustomerDetail = await customerDetailRepository.GetByExpressionWithTrackingAsync(c => c.Id == cashRegisterDetail.CustomerDetailId, cancellationToken);
+            if (oppositeCustomerDetail is null) return DomainResult<string>.NotFound("Cari hareketi bulunamadı.");
+
+            Customer? oppositeCustomer = await customerRepository.GetByExpressionWithTrackingAsync(c => c.Id == oppositeCustomerDetail.CustomerId, cancellationToken);
+            if (oppositeCustomer is null) return DomainResult<string>.NotFound("Cari bulunamadı.");
+
+            oppositeCustomer.DepositAmount -= oppositeCustomerDetail.DepositAmount;
+            oppositeCustomer.WithdrawalAmount -= oppositeCustomerDetail.WithdrawalAmount;
+
+            customerDetailRepository.Delete(oppositeCustomerDetail);
+        }
+
         cashRegisterDetailRepository.Delete(cashRegisterDetail);
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
-        companyContextHelper.RemoveCompanyFromContext("cashRegisters");
+        companyContextHelper.RemoveRangeCompanyFromContext(new[] { "banks", "cashRegisters" });
 
         return DomainResult.Success("Kasa hareketi başarıyla silindi.");
     }
