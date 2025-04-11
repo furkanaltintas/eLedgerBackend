@@ -54,7 +54,11 @@ class LoginCommandHandler(
             .OrderBy(c => c.Name)
             .ToListAsync(cancellationToken);
 
-        LoginCommandResponse loginResponse = await jwtTokenGenerator.CreateToken(user, Guid.Empty, companies);
+
+        LoginCommandResponse loginResponse;
+        if (companies.Count == 1) loginResponse = await jwtTokenGenerator.CreateToken(user, companies.First().Id, companies);
+        else loginResponse = await jwtTokenGenerator.CreateToken(user, Guid.Empty, companies);
+
         return DomainResult.Success(loginResponse);
     }
 }
