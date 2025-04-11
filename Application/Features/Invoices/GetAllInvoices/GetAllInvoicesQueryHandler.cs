@@ -15,20 +15,20 @@ sealed class GetAllInvoicesQueryHandler(
     public async Task<IDomainResult<List<Invoice>>> Handle(GetAllInvoicesQuery request, CancellationToken cancellationToken)
     {
         List<Invoice>? invoices;
-        string cacheKey = request.Type == InvoiceTypeEnum.Purchase.Value
-            ? "purchaseInvoices"
-            : "sellingInvoices";
 
-        invoices = companyContextHelper.GetCompanyFromContext<List<Invoice>>(cacheKey);
+        invoices = companyContextHelper.GetCompanyFromContext<List<Invoice>>("invoices");
 
         if (invoices is null)
         {
             invoices = await invoiceRepository
-                .Where(i => i.Type.Value == request.Type)
+                .GetAll()
+                .Include(i => i.Customer)
+                .Include(i => i.Details!)
+                .ThenInclude(i => i.Product)
                 .OrderBy(i => i.Date)
                 .ToListAsync(cancellationToken);
 
-            companyContextHelper.SetCompanyInContext(cacheKey, invoices);
+            companyContextHelper.SetCompanyInContext("invoices", invoices);
         }
 
         return DomainResult.Success(invoices);
