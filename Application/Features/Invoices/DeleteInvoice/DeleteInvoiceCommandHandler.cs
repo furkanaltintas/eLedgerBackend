@@ -23,10 +23,7 @@ sealed class DeleteInvoiceCommandHandler(
         if(invoice is null) return DomainResult.NotFound<string>("Fatura bulunamadı");
 
         CustomerDetail? customerDetail = await customerDetailRepository.Where(c => c.InvoiceId == request.Id).FirstOrDefaultAsync(cancellationToken);
-        if(customerDetail is not null)
-        {
-            customerDetailRepository.Delete(customerDetail);
-        }
+        if(customerDetail is not null) customerDetailRepository.Delete(customerDetail);
 
         Customer? customer = await customerRepository.Where(c => c.Id == invoice.CustomerId).FirstOrDefaultAsync(cancellationToken);
         if(customer is not null)
@@ -43,16 +40,17 @@ sealed class DeleteInvoiceCommandHandler(
             Product? product = await productRepository.GetByExpressionWithTrackingAsync(p => p.Id == detail.ProductId, cancellationToken);
             if(product is not null)
             {
-                product.Deposit -= invoice.Type.Value == InvoiceTypeEnum.Purchase.Value ? invoice.Amount : 0;
-                product.Withdrawal -= invoice.Type.Value == InvoiceTypeEnum.Selling.Value ? invoice.Amount : 0;
+                product.Deposit -= detail.Deposit;
+                product.Withdrawal -= detail.Withdrawal;
                 productRepository.Update(product);
             }
         }
 
+        invoiceRepository.Delete(invoice);
         productDetailRepository.DeleteRange(productDetails);
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
-        companyContextHelper.RemoveRangeCompanyFromContext(["purchaseInvoices", "sellingInvoices", "customers", "products"]);
+        companyContextHelper.RemoveRangeCompanyFromContext(["invoices", "customers", "products"]);
         return DomainResult.Success($"{invoice.Type.Name} kaydı başarıyla silindi");
     }
 }
