@@ -4,6 +4,8 @@ using Application.Features.CashRegisters.CreateCashRegister;
 using Application.Features.CashRegisters.UpdateCashRegister;
 using Application.Features.Customers.CreateCustomer;
 using Application.Features.Customers.UpdateCustomer;
+using Application.Features.Invoices.CreateInvoice;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.Enums;
 using Mapster;
@@ -32,5 +34,10 @@ public class SourceToDestinationMapping : IRegister
 
         config.NewConfig<UpdateCustomerCommand, Customer>()
             .Map(dest => dest.Type, src => CustomerTypeEnum.FromValue(src.TypeValue));
+
+        config.NewConfig<CreateInvoiceCommand, Invoice>()
+            .Map(dest => dest.Type, src => InvoiceTypeEnum.FromValue(src.TypeValue))
+            .Map(dest => dest.Amount, src => src.InvoiceDetails.Sum(id => id.Quantity * id.Price))
+            .Map(dest => dest.Details, src => src.InvoiceDetails.Select(id => new InvoiceDetailDto(id.ProductId, id.Quantity, id.Price)));
     }
 }

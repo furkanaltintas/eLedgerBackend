@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Ardalis.SmartEnum" Version="8.2.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.3" />
