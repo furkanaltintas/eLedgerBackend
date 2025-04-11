@@ -37,7 +37,7 @@ public class SourceToDestinationMapping : IRegister
 
         config.NewConfig<CreateInvoiceCommand, Invoice>()
             .Map(dest => dest.Type, src => InvoiceTypeEnum.FromValue(src.TypeValue))
-            .Map(dest => dest.Amount, src => src.InvoiceDetails.Sum(id => id.Quantity * id.Price))
-            .Map(dest => dest.Details, src => src.InvoiceDetails.Select(id => new InvoiceDetailDto(id.ProductId, id.Quantity, id.Price)));
+            .Map(dest => dest.Amount, src => src.Details.Sum(id => id.Quantity * id.Price))
+            .Map(dest => dest.Details, src => src.Details.Select(id => new InvoiceDetailDto(id.ProductId, id.Quantity, id.Price)));
     }
 }

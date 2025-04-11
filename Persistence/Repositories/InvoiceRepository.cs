@@ -5,7 +5,7 @@ using Persistence.Context;
 
 namespace Persistence.Repositories;
 
-class InvoiceRepository : Repository<Invoice, AppDbContext>, IInvoiceRepository
+class InvoiceRepository : Repository<Invoice, CompanyDbContext>, IInvoiceRepository
 {
-    public InvoiceRepository(AppDbContext context) : base(context) { }
+    public InvoiceRepository(CompanyDbContext context) : base(context) { }
 }
