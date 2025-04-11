@@ -9,4 +9,4 @@ public sealed record CreateInvoiceCommand(
     DateOnly Date,
     string InvoiceNumber,
     Guid CustomerId,
-    List<InvoiceDetailDto> InvoiceDetails) : IRequest<IDomainResult<string>>;
+    List<InvoiceDetailDto> Details) : IRequest<IDomainResult<string>>;

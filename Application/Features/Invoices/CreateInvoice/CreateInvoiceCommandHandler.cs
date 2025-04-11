@@ -47,7 +47,7 @@ sealed class CreateInvoiceCommandHandler(
         #endregion
 
         #region Product
-        foreach (var item in request.InvoiceDetails)
+        foreach (var item in request.Details)
         {
             Product product = await productRepository.GetByExpressionWithTrackingAsync(p => p.Id == item.ProductId, cancellationToken);
             product.Deposit += request.TypeValue == 1 ? item.Quantity : 0;
@@ -60,16 +60,16 @@ sealed class CreateInvoiceCommandHandler(
                 Description = $"{invoice.InvoiceNumber} Numaralı {invoice.Type.Name}",
                 Deposit = request.TypeValue == 1 ? item.Quantity : 0,
                 Withdrawal = request.TypeValue == 2 ? item.Quantity : 0,
-                InvoiceId = invoice.Id
+                InvoiceId = invoice.Id,
+                Price  = item.Price
             };
 
-            await productRepository.AddAsync(product, cancellationToken);
             await productDetailRepository.AddAsync(productDetail, cancellationToken);
         }
         #endregion
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
-        companyContextHelper.RemoveRangeCompanyFromContext(["purchaseInvoices", "sellingInvoices", "customers", "products"]);
+        companyContextHelper.RemoveRangeCompanyFromContext(["invoices", "customers", "products"]);
         return DomainResult.Success($"{invoice.Type.Name} kaydı başarıyla tamamlandı");
     }
 }
