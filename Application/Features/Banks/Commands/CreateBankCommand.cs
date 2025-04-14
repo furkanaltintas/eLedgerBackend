@@ -1,8 +1,10 @@
-﻿using DomainResults.Common;
+﻿using Application.Security;
+using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Banks.CreateBank;
+namespace Application.Features.Banks.Commands;
 
+[Authorize("Admnin", "Manager")]
 public record CreateBankCommand(
     string Name,
     string IBAN,
