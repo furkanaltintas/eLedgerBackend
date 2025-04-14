@@ -1,10 +1,11 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.CashRegisterDetails.Commands;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.CashRegisterDetails.DeleteCashRegisterDetail;
+namespace Application.Features.CashRegisterDetails.Handlers;
 
 class DeleteCashRegisterDetailCommandHandler(
     ICustomerRepository customerRepository,

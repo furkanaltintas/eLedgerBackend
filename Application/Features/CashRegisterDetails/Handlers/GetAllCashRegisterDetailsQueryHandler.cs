@@ -1,10 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Features.CashRegisterDetails.Queries;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.CashRegisterDetails.GetAllCashRegisterDetails;
+namespace Application.Features.CashRegisterDetails.Handlers;
 
 class GetAllCashRegisterDetailsQueryHandler(ICashRegisterRepository cashRegisterRepository) : IRequestHandler<GetAllCashRegisterDetailsQuery, IDomainResult<CashRegister>>
 {

@@ -1,10 +1,11 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.CashRegisterDetails.Commands;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.CashRegisterDetails.CreateCashRegisterDetail;
+namespace Application.Features.CashRegisterDetails.Handlers;
 
 class CreateCashRegisterDetailCommandHandler(
     ICustomerRepository customerRepository,
@@ -20,8 +21,8 @@ class CreateCashRegisterDetailCommandHandler(
     {
         CashRegister cashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.CashRegisterId, cancellationToken);
 
-        cashRegister.DepositAmount += (request.Type == 0 ? request.Amount : 0);
-        cashRegister.WithdrawalAmount += (request.Type == 1 ? request.Amount : 0);
+        cashRegister.DepositAmount += request.Type == 0 ? request.Amount : 0;
+        cashRegister.WithdrawalAmount += request.Type == 1 ? request.Amount : 0;
 
         CashRegisterDetail cashRegisterDetail = new()
         {
@@ -38,8 +39,8 @@ class CreateCashRegisterDetailCommandHandler(
         {
             CashRegister oppositeCashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.OppositeCashRegisterId, cancellationToken);
 
-            oppositeCashRegister.DepositAmount += (request.Type == 1 ? request.OppositeAmount : 0);
-            oppositeCashRegister.WithdrawalAmount += (request.Type == 0 ? request.OppositeAmount : 0);
+            oppositeCashRegister.DepositAmount += request.Type == 1 ? request.OppositeAmount : 0;
+            oppositeCashRegister.WithdrawalAmount += request.Type == 0 ? request.OppositeAmount : 0;
 
             CashRegisterDetail oppositeCashRegisterDetail = new()
             {
@@ -60,8 +61,8 @@ class CreateCashRegisterDetailCommandHandler(
         {
             Bank oppositeBank = await bankRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.OppositeBankId, cancellationToken);
 
-            oppositeBank.DepositAmount += (request.Type == 1 ? request.OppositeAmount : 0);
-            oppositeBank.WithdrawalAmount += (request.Type == 0 ? request.OppositeAmount : 0);
+            oppositeBank.DepositAmount += request.Type == 1 ? request.OppositeAmount : 0;
+            oppositeBank.WithdrawalAmount += request.Type == 0 ? request.OppositeAmount : 0;
 
             BankDetail oppositeBankDetail = new()
             {
@@ -83,8 +84,8 @@ class CreateCashRegisterDetailCommandHandler(
             Customer? customer = await customerRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.OppositeCustomerId, cancellationToken);
             if (customer is null) return DomainResult.Failed<string>("Cari bulunamadı");
 
-            customer.DepositAmount += (request.Type == 1 ? request.Amount : 0);
-            customer.WithdrawalAmount += (request.Type == 0 ? request.Amount : 0);
+            customer.DepositAmount += request.Type == 1 ? request.Amount : 0;
+            customer.WithdrawalAmount += request.Type == 0 ? request.Amount : 0;
 
             CustomerDetail customerDetail = new()
             {

@@ -2,7 +2,7 @@
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.CashRegisterDetails.GetAllCashRegisterDetails;
+namespace Application.Features.CashRegisterDetails.Queries;
 
 public record GetAllCashRegisterDetailsQuery(
     Guid CashRegisterId,

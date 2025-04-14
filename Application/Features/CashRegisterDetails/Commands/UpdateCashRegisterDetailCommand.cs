@@ -1,7 +1,7 @@
 ﻿using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.CashRegisterDetails.UpdateCashRegisterDetail;
+namespace Application.Features.CashRegisterDetails.Commands;
 
 public record UpdateCashRegisterDetailCommand(
     Guid Id,
