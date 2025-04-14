@@ -1,10 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Features.ProductDetails.Queries;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.ProductDetails.GetAllProductDetails;
+namespace Application.Features.ProductDetails.Handlers;
 
 sealed class GetAllProductDetailsQueryHandler(IProductRepository productRepository) : IRequestHandler<GetAllProductDetailsQuery, IDomainResult<Product>>
 {
