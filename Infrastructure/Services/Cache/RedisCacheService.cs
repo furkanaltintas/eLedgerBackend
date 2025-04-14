@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Application.Common.Interfaces;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 
 namespace Infrastructure.Services.Cache;
