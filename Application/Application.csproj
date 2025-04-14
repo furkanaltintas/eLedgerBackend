@@ -11,12 +11,53 @@
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="9.0.4" />
     <PackageReference Include="Validot" Version="2.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Exceptions\" />
+    <Folder Include="Common\Models\" />
+    <Folder Include="Constants\" />
+    <Folder Include="Features\BankDetails\Validators\" />
+    <Folder Include="Features\Banks\Validators\" />
+    <Folder Include="Features\CashRegisterDetails\Constants\" />
+    <Folder Include="Features\CashRegisterDetails\Responses\" />
+    <Folder Include="Features\CashRegisterDetails\Validators\" />
+    <Folder Include="Features\CashRegisters\Responses\" />
+    <Folder Include="Features\CashRegisters\Validators\" />
+    <Folder Include="Features\Companies\Responses\" />
+    <Folder Include="Features\Companies\Validators\" />
+    <Folder Include="Features\CustomerDetails\Constants\" />
+    <Folder Include="Features\Customers\Constants\" />
+    <Folder Include="Features\Customers\Responses\" />
+    <Folder Include="Features\Customers\Validators\" />
+    <Folder Include="Features\Invoices\Constants\" />
+    <Folder Include="Features\Invoices\Responses\" />
+    <Folder Include="Features\Invoices\Validators\" />
+    <Folder Include="Features\ProductDetails\Constants\" />
+    <Folder Include="Features\ProductDetails\Responses\" />
+    <Folder Include="Features\Products\Constants\" />
+    <Folder Include="Features\Products\Responses\" />
+    <Folder Include="Features\Products\Validators\" />
+    <Folder Include="Features\Reports\Commands\" />
+    <Folder Include="Features\Reports\Constants\" />
+    <Folder Include="Features\Reports\Validators\" />
+    <Folder Include="Features\Users\Constants\" />
+    <Folder Include="Features\Users\Responses\" />
+    <Folder Include="Features\Users\Validators\" />
+    <Folder Include="Features\_Example\Constants\" />
+    <Folder Include="Features\_Example\Validators\" />
+    <Folder Include="Features\_Example\Responses\" />
+    <Folder Include="Features\_Example\Handlers\" />
+    <Folder Include="Features\_Example\Queries\" />
+    <Folder Include="Features\_Example\Commands\" />
+    <Folder Include="Localization\" />
   </ItemGroup>
 
 </Project>

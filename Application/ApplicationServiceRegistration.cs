@@ -1,6 +1,5 @@
-﻿using Application.Helpers;
-using Application.Interfaces;
-using Application.Mapping;
+﻿using Application.Common.Mapping;
+using Application.Features.Banks.Rules;
 using Domain.Entities;
 using Mapster;
 using MapsterMapper;
@@ -10,14 +9,13 @@ using System.Reflection;
 
 namespace Application;
 
-public static class DependencyInjection
+public static class ApplicationServiceRegistration
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         Assembly assembly = Assembly.GetExecutingAssembly();
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddScoped<ICompanyContextHelper, CompanyContextHelper>();
 
         #region Mapper
         TypeAdapterConfig config = TypeAdapterConfig.GlobalSettings;
@@ -30,6 +28,8 @@ public static class DependencyInjection
         services.AddMediatR(configuration =>
         { configuration.RegisterServicesFromAssemblies(assembly, typeof(AppUser).Assembly); });
         #endregion
+
+        services.AddScoped<BankRules>();
 
         return services;
     }
