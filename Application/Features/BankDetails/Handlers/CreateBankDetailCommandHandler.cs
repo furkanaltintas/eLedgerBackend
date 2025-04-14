@@ -1,10 +1,13 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.BankDetails.Commands;
+using Application.Features.BankDetails.Constants;
+using Application.Features.Banks.Constants;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.BankDetails.CreateBankDetail;
+namespace Application.Features.BankDetails.Handlers;
 
 class CreateBankDetailCommandHandler(
     ICustomerRepository customerRepository,
@@ -19,8 +22,8 @@ class CreateBankDetailCommandHandler(
     public async Task<IDomainResult<string>> Handle(CreateBankDetailCommand request, CancellationToken cancellationToken)
     {
         Bank bank = await bankRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.BankId, cancellationToken);
-        bank.DepositAmount += (request.Type == 0 ? request.Amount : 0);
-        bank.WithdrawalAmount += (request.Type == 1 ? request.Amount : 0);
+        bank.DepositAmount += request.Type == 0 ? request.Amount : 0;
+        bank.WithdrawalAmount += request.Type == 1 ? request.Amount : 0;
 
         BankDetail bankDetail = new()
         {
@@ -37,8 +40,8 @@ class CreateBankDetailCommandHandler(
         {
             Bank oppositeCashRegister = await bankRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.OppositeBankId, cancellationToken);
 
-            oppositeCashRegister.DepositAmount += (request.Type == 1 ? request.OppositeAmount : 0);
-            oppositeCashRegister.WithdrawalAmount += (request.Type == 0 ? request.OppositeAmount : 0);
+            oppositeCashRegister.DepositAmount += request.Type == 1 ? request.OppositeAmount : 0;
+            oppositeCashRegister.WithdrawalAmount += request.Type == 0 ? request.OppositeAmount : 0;
 
             BankDetail oppositeBankDetail = new()
             {
@@ -59,8 +62,8 @@ class CreateBankDetailCommandHandler(
         {
             CashRegister oppositeCashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.OppositeCashRegisterId, cancellationToken);
 
-            oppositeCashRegister.DepositAmount += (request.Type == 1 ? request.OppositeAmount : 0);
-            oppositeCashRegister.WithdrawalAmount += (request.Type == 0 ? request.OppositeAmount : 0);
+            oppositeCashRegister.DepositAmount += request.Type == 1 ? request.OppositeAmount : 0;
+            oppositeCashRegister.WithdrawalAmount += request.Type == 0 ? request.OppositeAmount : 0;
 
             CashRegisterDetail oppositeCashRegisterDetail = new()
             {
@@ -82,8 +85,8 @@ class CreateBankDetailCommandHandler(
             Customer? customer = await customerRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.OppositeCustomerId, cancellationToken);
             if (customer is null) return DomainResult.Failed<string>("Cari bulunamadı");
 
-            customer.DepositAmount += (request.Type == 1 ? request.Amount : 0);
-            customer.WithdrawalAmount += (request.Type == 0 ? request.Amount : 0);
+            customer.DepositAmount += request.Type == 1 ? request.Amount : 0;
+            customer.WithdrawalAmount += request.Type == 0 ? request.Amount : 0;
 
             CustomerDetail customerDetail = new()
             {
@@ -103,8 +106,8 @@ class CreateBankDetailCommandHandler(
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
-        companyContextHelper.RemoveRangeCompanyFromContext(new[] { "banks", "cashRegisters", "customers" });
+        companyContextHelper.RemoveRangeCompanyFromContext(new[] { BanksMessages.Cache, CashRegisters.Cache, CustomersMessages.Cache });
 
-        return DomainResult.Success("Bank detail created successfully.");
+        return DomainResult.Success(BankDetailsMessages.Created);
     }
 }

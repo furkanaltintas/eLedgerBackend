@@ -1,7 +1,7 @@
 ﻿using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.BankDetails.CreateBankDetail;
+namespace Application.Features.BankDetails.Commands;
 
 public record CreateBankDetailCommand(
     Guid BankId,

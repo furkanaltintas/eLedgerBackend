@@ -1,10 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Features.BankDetails.Queries;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.BankDetails.GetAllBankDetails;
+namespace Application.Features.BankDetails.Handlers;
 
 class GetAllBankDetailsQueryHandler(
     IBankRepository bankRepository) : IRequestHandler<GetAllBankDetailsQuery, IDomainResult<Bank>>

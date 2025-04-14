@@ -1,7 +1,7 @@
 ﻿using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.BankDetails.UpdateBankDetail;
+namespace Application.Features.BankDetails.Commands;
 
 public record UpdateBankDetailCommand(
     Guid Id,

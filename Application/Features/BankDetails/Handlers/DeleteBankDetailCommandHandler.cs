@@ -1,10 +1,15 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.BankDetails.Commands;
+using Application.Features.BankDetails.Constants;
+using Application.Features.BankDetails.Rules;
+using Application.Features.Banks.Constants;
+using Application.Features.Banks.Rules;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.BankDetails.DeleteBankDetail;
+namespace Application.Features.BankDetails.Handlers;
 
 class DeleteBankDetailCommandHandler(
     ICustomerRepository customerRepository,
@@ -14,26 +19,28 @@ class DeleteBankDetailCommandHandler(
     IBankRepository bankRepository,
     IBankDetailRepository bankDetailRepository,
     IUnitOfWorkCompany unitOfWorkCompany,
-    ICompanyContextHelper companyContextHelper) : IRequestHandler<DeleteBankDetailCommand, IDomainResult<string>>
+    ICompanyContextHelper companyContextHelper,
+    BankDetailRules bankDetailRules,
+    BankRules bankRules) : IRequestHandler<DeleteBankDetailCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(DeleteBankDetailCommand request, CancellationToken cancellationToken)
     {
-        BankDetail? bankDetail = await bankDetailRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.Id, cancellationToken);
-        if (bankDetail is null) return DomainResult<string>.NotFound("Banka hareketi bulunamadı.");
+        BankDetail? bankDetail = await bankDetailRules.CheckAsync(request.Id, cancellationToken);
+        if (bankDetail is null) return DomainResult<string>.NotFound(BankDetailsMessages.NotFound);
 
-        Bank? bank = await bankRepository.GetByExpressionWithTrackingAsync(c => c.Id == bankDetail.BankId, cancellationToken);
-        if (bank is null) return DomainResult<string>.NotFound("Banka bulunamadı.");
+        Bank? bank = await bankRules.CheckAsync(bankDetail.BankId, cancellationToken);
+        if (bank is null) return DomainResult<string>.NotFound(BanksMessages.NotFound);
 
         bank.DepositAmount -= bankDetail.DepositAmount;
         bank.WithdrawalAmount -= bankDetail.WithdrawalAmount;
 
         if (bankDetail.BankDetailId is not null)
         {
-            BankDetail? oppositeBankDetail = await bankDetailRepository.GetByExpressionWithTrackingAsync(c => c.Id == bankDetail.BankDetailId, cancellationToken);
-            if (oppositeBankDetail is null) return DomainResult<string>.NotFound("Banka hareketi bulunamadı.");
+            BankDetail? oppositeBankDetail = await bankDetailRules.CheckAsync((Guid)bankDetail.BankDetailId, cancellationToken);
+            if (oppositeBankDetail is null) return DomainResult<string>.NotFound(BankDetailsMessages.NotFound);
 
-            Bank? oppositeBank = await bankRepository.GetByExpressionWithTrackingAsync(c => c.Id == oppositeBankDetail.BankId, cancellationToken);
-            if (oppositeBank is null) return DomainResult<string>.NotFound("Banka bulunamadı.");
+            Bank? oppositeBank = await bankRules.CheckAsync(oppositeBankDetail.BankId, cancellationToken);
+            if (oppositeBank is null) return DomainResult<string>.NotFound(BanksMessages.NotFound);
 
             oppositeBank.DepositAmount -= oppositeBankDetail.DepositAmount;
             oppositeBank.WithdrawalAmount -= oppositeBankDetail.WithdrawalAmount;

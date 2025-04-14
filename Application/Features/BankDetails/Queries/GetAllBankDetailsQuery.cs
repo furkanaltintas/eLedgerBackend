@@ -2,7 +2,7 @@
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.BankDetails.GetAllBankDetails;
+namespace Application.Features.BankDetails.Queries;
 
 public record GetAllBankDetailsQuery(
     Guid BankId,
