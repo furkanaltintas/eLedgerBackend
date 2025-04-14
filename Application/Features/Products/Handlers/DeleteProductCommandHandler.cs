@@ -1,10 +1,11 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Products.Commands;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Products.DeleteProduct;
+namespace Application.Features.Products.Handlers;
 
 sealed class DeleteProductCommandHandler(
     IProductRepository productRepository,

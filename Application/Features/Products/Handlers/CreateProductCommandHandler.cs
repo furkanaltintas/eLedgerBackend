@@ -1,11 +1,12 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Products.Commands;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
 using MediatR;
 
-namespace Application.Features.Products.CreateProduct;
+namespace Application.Features.Products.Handlers;
 
 class CreateProductCommandHandler(
     IProductRepository productRepository,
@@ -15,7 +16,7 @@ class CreateProductCommandHandler(
 {
     public async Task<IDomainResult<string>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        Boolean isNameExists = await productRepository.AnyAsync(p => p.Name == request.Name, cancellationToken);
+        bool isNameExists = await productRepository.AnyAsync(p => p.Name == request.Name, cancellationToken);
         if(isNameExists) return DomainResult.Failed<string>("Product with the same name already exists.");
 
         Product product = mapper.Map<Product>(request);

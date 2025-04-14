@@ -1,11 +1,12 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Products.Commands;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
 using MediatR;
 
-namespace Application.Features.Products.UpdateProduct;
+namespace Application.Features.Products.Handlers;
 
 sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,
@@ -20,7 +21,7 @@ sealed class UpdateProductCommandHandler(
 
         if (product.Name != request.Name)
         {
-            Boolean isNameExists = await productRepository.AnyAsync(p => p.Name == request.Name, cancellationToken);
+            bool isNameExists = await productRepository.AnyAsync(p => p.Name == request.Name, cancellationToken);
             if (isNameExists) return DomainResult.Failed<string>("Product with the same name already exists.");
         }
 
