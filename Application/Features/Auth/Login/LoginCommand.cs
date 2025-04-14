@@ -1,5 +1,4 @@
 ﻿using DomainResults.Common;
-using Infrastructure.Configurations;
 using MediatR;
 
 namespace Application.Features.Auth.Login;

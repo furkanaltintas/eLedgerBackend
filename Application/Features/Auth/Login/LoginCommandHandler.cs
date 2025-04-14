@@ -1,8 +1,7 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
-using Infrastructure.Configurations;
-using Infrastructure.Services.Jwt;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
