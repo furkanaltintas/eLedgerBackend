@@ -1,12 +1,14 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Invoices.Commands;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 
-namespace Application.Features.Invoices.CreateInvoice;
+namespace Application.Features.Invoices.Handlers;
 
 sealed class CreateInvoiceCommandHandler(
     IInvoiceRepository invoiceRepository,
@@ -16,7 +18,8 @@ sealed class CreateInvoiceCommandHandler(
     ICustomerDetailRepository customerDetailRepository,
     IUnitOfWorkCompany unitOfWorkCompany,
     ICompanyContextHelper companyContextHelper,
-    IMapper mapper) : IRequestHandler<CreateInvoiceCommand, IDomainResult<string>>
+    IMapper mapper,
+    ISignalRService signalRService) : IRequestHandler<CreateInvoiceCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
     {
@@ -61,7 +64,7 @@ sealed class CreateInvoiceCommandHandler(
                 Deposit = request.TypeValue == 1 ? item.Quantity : 0,
                 Withdrawal = request.TypeValue == 2 ? item.Quantity : 0,
                 InvoiceId = invoice.Id,
-                Price  = item.Price
+                Price = item.Price
             };
 
             await productDetailRepository.AddAsync(productDetail, cancellationToken);
@@ -69,7 +72,14 @@ sealed class CreateInvoiceCommandHandler(
         #endregion
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
-        companyContextHelper.RemoveRangeCompanyFromContext(["invoices", "customers", "products"]);
+        companyContextHelper.RemoveRangeCompanyFromContext(["invoices", "customers", "products", "purchase_reports"]);
+
+        if (invoice.Type == InvoiceTypeEnum.Selling)
+            await signalRService.SendPurchaseReportAsync(new { Date = invoice.Date, Amount = invoice.Amount });
+
         return DomainResult.Success($"{invoice.Type.Name} kaydı başarıyla tamamlandı");
     }
 }
+
+
+// Eski Yöntem => await hubContext.Clients.All.SendAsync("PurchaseCreateReports", new { invoice.Date, invoice.Amount });

@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Invoices.Queries;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
@@ -6,7 +7,7 @@ using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Invoices.GetAllInvoices;
+namespace Application.Features.Invoices.Handlers;
 
 sealed class GetAllInvoicesQueryHandler(
     IInvoiceRepository invoiceRepository,

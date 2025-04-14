@@ -2,7 +2,7 @@
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Invoices.CreateInvoice;
+namespace Application.Features.Invoices.Commands;
 
 public sealed record CreateInvoiceCommand(
     int TypeValue,
