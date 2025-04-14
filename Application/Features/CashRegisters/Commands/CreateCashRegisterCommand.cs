@@ -1,7 +1,7 @@
 ﻿using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.CashRegisters.CreateCashRegister;
+namespace Application.Features.CashRegisters.Commands;
 
 public record CreateCashRegisterCommand(
     string Name,
