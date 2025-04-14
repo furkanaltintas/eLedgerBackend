@@ -1,10 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Application.Features.Users.Commands;
+using Domain.Entities;
 using DomainResults.Common;
-using Infrastructure.Services.Cache;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Features.Users.DeleteUser;
+namespace Application.Features.Users.Handlers;
 
 class DeleteUserCommandHandler(
     UserManager<AppUser> userManager,

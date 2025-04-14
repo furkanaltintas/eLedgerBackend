@@ -1,14 +1,13 @@
 ﻿using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Users.UpdateUser;
+namespace Application.Features.Users.Commands;
 
-public record UpdateUserCommand(
-    Guid Id,
+public record CreateUserCommand(
     string FirstName,
     string LastName,
     string UserName,
     string Email,
-    string? Password,
+    string Password,
     List<string> CompanyIds,
     bool IsAdmin) : IRequest<IDomainResult<string>>;

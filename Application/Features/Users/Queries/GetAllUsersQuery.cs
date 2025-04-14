@@ -2,6 +2,6 @@
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Users.GetAllUsers;
+namespace Application.Features.Users.Queries;
 
 public record GetAllUsersQuery() : IRequest<IDomainResult<List<AppUser>>>;

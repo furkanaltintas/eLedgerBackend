@@ -1,14 +1,15 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Application.Features.Users.Commands;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
-using Infrastructure.Services.Cache;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Users.CreateUser;
+namespace Application.Features.Users.Handlers;
 
 class CreateUserCommandHandler(
     UserManager<AppUser> userManager,
@@ -19,7 +20,7 @@ class CreateUserCommandHandler(
 {
     public async Task<IDomainResult<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        Boolean isUserExists = await userManager.Users.AnyAsync(u => u.UserName == request.UserName || u.Email == request.Email, cancellationToken);
+        bool isUserExists = await userManager.Users.AnyAsync(u => u.UserName == request.UserName || u.Email == request.Email, cancellationToken);
         if (isUserExists) return DomainResult<string>.Failed("User already exists");
 
         AppUser user = mapper.Map<AppUser>(request);

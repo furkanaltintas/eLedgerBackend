@@ -1,11 +1,12 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Application.Features.Users.Queries;
+using Domain.Entities;
 using DomainResults.Common;
-using Infrastructure.Services.Cache;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Users.GetAllUsers;
+namespace Application.Features.Users.Handlers;
 
 class GetAllUsersQueryHandler(
     UserManager<AppUser> userManager,

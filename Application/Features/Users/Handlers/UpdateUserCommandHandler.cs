@@ -1,14 +1,15 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Application.Features.Users.Commands;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
-using Infrastructure.Services.Cache;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Users.UpdateUser;
+namespace Application.Features.Users.Handlers;
 
 class UpdateUserCommandHandler(
     UserManager<AppUser> userManager,
@@ -27,13 +28,13 @@ class UpdateUserCommandHandler(
 
         if (user.UserName != request.UserName)
         {
-            Boolean isUserNameExists = await userManager.Users.AnyAsync(u => u.UserName == request.UserName, cancellationToken);
+            bool isUserNameExists = await userManager.Users.AnyAsync(u => u.UserName == request.UserName, cancellationToken);
             if (isUserNameExists) return DomainResult<string>.Failed("User already exists");
         }
 
         if (user.Email != request.Email)
         {
-            Boolean isEmailExists = await userManager.Users.AnyAsync(u => u.Email == request.Email, cancellationToken);
+            bool isEmailExists = await userManager.Users.AnyAsync(u => u.Email == request.Email, cancellationToken);
             if (isEmailExists) return DomainResult<string>.Failed("Email already exists");
 
             user.EmailConfirmed = false;
@@ -46,7 +47,7 @@ class UpdateUserCommandHandler(
 
         if (request.Password is not null)
         {
-            String token = await userManager.GeneratePasswordResetTokenAsync(user);
+            string token = await userManager.GeneratePasswordResetTokenAsync(user);
 
             identityResult = await userManager.ResetPasswordAsync(user, token, request.Password);
             if (!identityResult.Succeeded) return DomainResult<string>.Failed(identityResult.Errors.Select(e => e.Description).ToList());
