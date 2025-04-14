@@ -1,9 +1,10 @@
 ﻿using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Customers.CreateCustomer;
+namespace Application.Features.Customers.Commands;
 
-public record CreateCustomerCommand(
+public record UpdateCustomerCommand(
+    Guid Id,
     string Name,
     int TypeValue,
     string City,

@@ -1,11 +1,12 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Customers.Commands;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
 using MediatR;
 
-namespace Application.Features.Customers.UpdateCustomer;
+namespace Application.Features.Customers.Handlers;
 
 class UpdateCustomerCommandHandler(
     ICustomerRepository customerRepository,

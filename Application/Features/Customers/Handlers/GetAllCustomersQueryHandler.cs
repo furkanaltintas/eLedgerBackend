@@ -1,11 +1,12 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Customers.Queries;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Customers.GetAllCustomers;
+namespace Application.Features.Customers.Handlers;
 
 class GetAllCustomersQueryHandler(
     ICustomerRepository customerRepository,

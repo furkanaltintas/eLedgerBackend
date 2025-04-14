@@ -1,10 +1,11 @@
-﻿using Application.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Features.Customers.Commands;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Customers.DeleteCustomer;
+namespace Application.Features.Customers.Handlers;
 
 class DeleteCustomerCommandHandler(
     ICustomerRepository customerRepository,

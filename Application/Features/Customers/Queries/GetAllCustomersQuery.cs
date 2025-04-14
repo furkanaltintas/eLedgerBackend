@@ -2,6 +2,6 @@
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Customers.GetAllCustomers;
+namespace Application.Features.Customers.Queries;
 
 public record GetAllCustomersQuery() : IRequest<IDomainResult<List<Customer>>>;
