@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WebAPI;
 
-public static class DependencyInjection
+public static class PresentationServiceRegistration
 {
     public const string AllowSpecificOrigins = "AllowSpecificOrigins";
 
