@@ -1,9 +1,5 @@
-﻿using Application.Features.Companies.CreateCompany;
-using Application.Features.Companies.DeleteCompany;
-using Application.Features.Companies.GetAllCompanies;
-using Application.Features.Companies.MigrateAllCompanies;
-using Application.Features.Companies.UpdateCompany;
-using Application.Features.Companies.UserCompanies;
+﻿using Application.Features.Companies.Commands;
+using Application.Features.Companies.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

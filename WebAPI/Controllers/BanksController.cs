@@ -1,7 +1,5 @@
-﻿using Application.Features.Banks.CreateBank;
-using Application.Features.Banks.DeleteBank;
-using Application.Features.Banks.GetAllBanks;
-using Application.Features.Banks.UpdateBank;
+﻿using Application.Features.Banks.Commands;
+using Application.Features.Banks.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;

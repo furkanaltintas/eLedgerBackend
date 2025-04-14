@@ -1,7 +1,5 @@
-﻿using Application.Features.Users.CreateUser;
-using Application.Features.Users.DeleteUser;
-using Application.Features.Users.GetAllUsers;
-using Application.Features.Users.UpdateUser;
+﻿using Application.Features.Users.Commands;
+using Application.Features.Users.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;

@@ -1,11 +1,5 @@
-﻿using Application.Features.Banks.CreateBank;
-using Application.Features.Banks.DeleteBank;
-using Application.Features.Banks.GetAllBanks;
-using Application.Features.Banks.UpdateBank;
-using Application.Features.Products.CreateProduct;
-using Application.Features.Products.DeleteProduct;
-using Application.Features.Products.GetAllProducts;
-using Application.Features.Products.UpdateProduct;
+﻿using Application.Features.Products.Commands;
+using Application.Features.Products.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;

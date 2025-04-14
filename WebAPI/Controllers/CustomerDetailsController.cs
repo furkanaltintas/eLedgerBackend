@@ -1,4 +1,4 @@
-﻿using Application.Features.CustomerDetails.GetAllCustomerDetails;
+﻿using Application.Features.CustomerDetails.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;

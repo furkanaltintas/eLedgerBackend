@@ -1,10 +1,8 @@
-﻿using Application.Features.Customers.CreateCustomer;
-using Application.Features.Customers.DeleteCustomer;
-using Application.Features.Customers.GetAllCustomers;
-using Application.Features.Customers.UpdateCustomer;
+﻿using Application.Features.Customers.Queries;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;
 using MediatR;
+using Application.Features.Customers.Commands;
 
 namespace WebAPI.Controllers;
 

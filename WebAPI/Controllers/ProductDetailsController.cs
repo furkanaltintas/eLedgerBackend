@@ -1,4 +1,4 @@
-﻿using Application.Features.ProductDetails.GetAllProductDetails;
+﻿using Application.Features.ProductDetails.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;

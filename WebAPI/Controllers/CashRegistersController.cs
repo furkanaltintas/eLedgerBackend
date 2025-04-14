@@ -1,7 +1,5 @@
-﻿using Application.Features.CashRegisters.CreateCashRegister;
-using Application.Features.CashRegisters.DeleteCashRegister;
-using Application.Features.CashRegisters.GetAllCashRegisters;
-using Application.Features.CashRegisters.UpdateCashRegister;
+﻿using Application.Features.CashRegisters.Commands;
+using Application.Features.CashRegisters.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;

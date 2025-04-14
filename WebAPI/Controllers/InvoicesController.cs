@@ -1,9 +1,8 @@
-﻿using Application.Features.Invoices.GetAllInvoices;
-using Application.Features.Invoices.CreateInvoice;
-using Application.Features.Invoices.DeleteInvoice;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Abstractions;
 using MediatR;
+using Application.Features.Invoices.Queries;
+using Application.Features.Invoices.Commands;
 
 namespace WebAPI.Controllers;
 
