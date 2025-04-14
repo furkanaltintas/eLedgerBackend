@@ -1,10 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Features.CustomerDetails.Queries;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.CustomerDetails.GetAllCustomerDetails;
+namespace Application.Features.CustomerDetails.Handlers;
 
 class GetAllCustomerDetailsQueryHandler(ICustomerRepository customerRepository) : IRequestHandler<GetAllCustomerDetailsQuery, IDomainResult<Customer>>
 {
