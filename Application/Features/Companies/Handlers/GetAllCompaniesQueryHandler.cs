@@ -1,11 +1,13 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces;
+using Application.Features.Companies.Constants;
+using Application.Features.Companies.Queries;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
-using Infrastructure.Services.Cache;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Companies.GetAllCompanies;
+namespace Application.Features.Companies.Handlers;
 
 class GetAllCompaniesQueryHandler(
     ICompanyRepository companyRepository,
@@ -13,19 +15,12 @@ class GetAllCompaniesQueryHandler(
 {
     public async Task<IDomainResult<List<Company>>> Handle(GetAllCompaniesQuery request, CancellationToken cancellationToken)
     {
-        List<Company> companies;
+        List<Company> companies = cacheService.Get<List<Company>>(CompaniesMessages.Cache);
 
-        companies = cacheService.Get<List<Company>>("companies");
         if (companies is null)
         {
-            companies = await companyRepository
-                .GetAll()
-                .OrderBy(c => c.Name)
-                .ToListAsync(cancellationToken);
-
-            cacheService.Set("companies", companies);
-
-            return DomainResult.Success(companies);
+            companies = await companyRepository.GetAll().OrderBy(c => c.Name).ToListAsync(cancellationToken);
+            cacheService.Set(CompaniesMessages.Cache, companies);
         }
 
         return DomainResult.Success(companies);

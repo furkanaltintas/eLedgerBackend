@@ -1,11 +1,13 @@
-﻿using Application.Services;
+﻿using Application.Common.Interfaces;
+using Application.Features.Companies.Commands;
+using Application.Features.Companies.Constants;
 using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Companies.MigrateAllCompanies;
+namespace Application.Features.Companies.Handlers;
 
 class MigrateAllCompaniesCommandHandler(
     ICompanyRepository companyRepository,
@@ -14,8 +16,8 @@ class MigrateAllCompaniesCommandHandler(
     public async Task<IDomainResult<string>> Handle(MigrateAllCompaniesCommand request, CancellationToken cancellationToken)
     {
         List<Company> companies = await companyRepository.GetAll().ToListAsync(cancellationToken);
-
         companyService.MigrateAllCompanies(companies);
-        return DomainResult.Success("Şirket databaseleri başarıyla güncellendi");
+
+        return DomainResult.Success(CompaniesMessages.DatabasesUpdated);
     }
 }

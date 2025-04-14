@@ -1,10 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Features.Companies.Queries;
+using Domain.Entities;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Companies.UserCompanies;
+namespace Application.Features.Companies.Handlers;
 
 class UserCompaniesQueryHandler(
     ICompanyUserRepository companyUserRepository) : IRequestHandler<UserCompaniesQuery, IDomainResult<List<Company>>>
@@ -13,7 +14,7 @@ class UserCompaniesQueryHandler(
     {
         List<Company> companies = await companyUserRepository
             .GetAll()
-            .Where(c => c.AppUserId == Guid.Parse(request.UserId))
+            .Where(c => c.AppUserId == request.UserId)
             .Include(c => c.Company)
             .Select(c => new Company
             {

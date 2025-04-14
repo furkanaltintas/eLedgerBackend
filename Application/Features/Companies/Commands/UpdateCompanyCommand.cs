@@ -2,9 +2,10 @@
 using DomainResults.Common;
 using MediatR;
 
-namespace Application.Features.Companies.CreateCompany;
+namespace Application.Features.Companies.Commands;
 
-public record CreateCompanyCommand(
+public record UpdateCompanyCommand(
+    Guid Id,
     string Name,
     string FullAddress,
     string TaxDepartment,
