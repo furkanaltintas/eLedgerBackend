@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Companies.Commands;
 
-public record CreateCompanyCommand(
+public sealed record CreateCompanyCommand(
     string Name,
     string FullAddress,
     string TaxDepartment,

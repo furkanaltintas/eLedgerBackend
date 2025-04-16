@@ -1,10 +1,10 @@
-﻿using Application.Common.Handlers;
+﻿using Application.Common.Handlers.Companies;
 using Application.Common.Interfaces;
 using Application.Features.CashRegisters.Constants;
 using Application.Features.Companies.Commands;
 using Application.Features.Companies.Constants;
 using Application.Features.Companies.Rules;
-using Domain.Entities;
+using Domain.Entities.Partners;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
@@ -12,7 +12,7 @@ using MediatR;
 
 namespace Application.Features.Companies.Handlers;
 
-class DeleteCompanyCommandHandler : BaseCommandHandler, IRequestHandler<DeleteCompanyCommand, IDomainResult<string>>
+class DeleteCompanyCommandHandler : CompanyCommandHandlerBase, IRequestHandler<DeleteCompanyCommand, IDomainResult<string>>
 {
     private readonly CompanyRules _companyRules;
 
@@ -27,7 +27,6 @@ class DeleteCompanyCommandHandler : BaseCommandHandler, IRequestHandler<DeleteCo
         if (company is null) return DomainResult.NotFound<string>(CompaniesMessages.NotFound);
 
         company.IsDeleted = true;
-
-        return await Success(new[] { CashRegistersMessages.Cache }, CashRegistersMessages.Deleted, cancellationToken);
+        return await SuccessAsync(new[] { CashRegistersMessages.Cache }, CashRegistersMessages.Deleted, cancellationToken);
     }
 }

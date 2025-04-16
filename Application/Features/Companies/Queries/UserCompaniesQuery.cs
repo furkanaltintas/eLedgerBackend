@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Partners;
 using DomainResults.Common;
 using MediatR;
 
 namespace Application.Features.Companies.Queries;
 
-public record UserCompaniesQuery(Guid UserId) : IRequest<IDomainResult<List<Company>>>;
+public sealed record UserCompaniesQuery(Guid UserId) : IRequest<IDomainResult<List<Company>>>;

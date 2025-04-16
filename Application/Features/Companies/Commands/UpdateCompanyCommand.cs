@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Features.Companies.Commands;
 
-public record UpdateCompanyCommand(
+public sealed record UpdateCompanyCommand(
     Guid Id,
     string Name,
     string FullAddress,
