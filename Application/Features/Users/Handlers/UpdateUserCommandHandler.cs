@@ -1,74 +1,92 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Handlers.Partners;
+using Application.Common.Interfaces;
 using Application.Features.Users.Commands;
-using Domain.Entities;
+using Application.Features.Users.Constants;
+using Application.Features.Users.Rules;
+using Domain.Entities.Partners;
 using Domain.Interfaces;
 using DomainResults.Common;
 using GenericRepository;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Handlers;
 
-class UpdateUserCommandHandler(
-    UserManager<AppUser> userManager,
-    ICompanyUserRepository companyUserRepository,
-    IUnitOfWork unitOfWork,
-    ICacheService cacheService,
-    IMapper mapper) : IRequestHandler<UpdateUserCommand, IDomainResult<string>>
+internal sealed class UpdateUserCommandHandler : ApplicationCommandHandlerBase, IRequestHandler<UpdateUserCommand, IDomainResult<string>>
 {
+    private readonly ICompanyUserRepository _companyUserRepository;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly UserRules _userRules;
+
+    public UpdateUserCommandHandler(IUnitOfWork unitOfWork, ICacheService cacheService, IMapper mapper, ICompanyUserRepository companyUserRepository, UserManager<AppUser> userManager, UserRules userRules) : base(unitOfWork, cacheService, mapper)
+    {
+        _companyUserRepository = companyUserRepository;
+        _userManager = userManager;
+        _userRules = userRules;
+    }
+
     public async Task<IDomainResult<string>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        AppUser? user = await userManager.Users
-            .Where(u => u.Id == request.Id)
-            .Include(u => u.CompanyUsers)
-            .FirstOrDefaultAsync(cancellationToken);
-        if (user is null) return DomainResult<string>.Failed("User not found");
+        AppUser? user = await _userRules.GetUserWithCompaniesAsync(request.Id, cancellationToken);
+        if (user is null) return DomainResult<string>.Failed(UsersMessages.NotFound);
 
-        if (user.UserName != request.UserName)
-        {
-            bool isUserNameExists = await userManager.Users.AnyAsync(u => u.UserName == request.UserName, cancellationToken);
-            if (isUserNameExists) return DomainResult<string>.Failed("User already exists");
-        }
+        IDomainResult<string> checkUserNameExistsResult = await _userRules.CheckUserNameExistsAsync(user.UserName!, request.UserName, cancellationToken);
+        if(!checkUserNameExistsResult.IsSuccess) return checkUserNameExistsResult;
 
-        if (user.Email != request.Email)
-        {
-            bool isEmailExists = await userManager.Users.AnyAsync(u => u.Email == request.Email, cancellationToken);
-            if (isEmailExists) return DomainResult<string>.Failed("Email already exists");
+        IDomainResult<string> checkEmailExistsResult = await _userRules.CheckEmailExistsAsync(request.Email, user, cancellationToken);
+        if (!checkEmailExistsResult.IsSuccess) return checkEmailExistsResult;
 
-            user.EmailConfirmed = false;
-        }
+        Mapper.Map(request, user);
 
-        mapper.Map(request, user);
+        IDomainResult<string> updateUserResult = await UpdateUserAsync(user, cancellationToken);
+        if (!updateUserResult.IsSuccess) return updateUserResult;
 
-        IdentityResult identityResult = await userManager.UpdateAsync(user);
-        if (!identityResult.Succeeded) return DomainResult<string>.Failed(identityResult.Errors.Select(e => e.Description).ToList());
+        IDomainResult<string> updatePasswordResult = await UpdatePasswordAsync(user, request.Password, cancellationToken);
+        if (!updatePasswordResult.IsSuccess) return updatePasswordResult;
 
-        if (request.Password is not null)
-        {
-            string token = await userManager.GeneratePasswordResetTokenAsync(user);
-
-            identityResult = await userManager.ResetPasswordAsync(user, token, request.Password);
-            if (!identityResult.Succeeded) return DomainResult<string>.Failed(identityResult.Errors.Select(e => e.Description).ToList());
-        }
-
-        if (request.CompanyIds!.Any())
-        {
-            companyUserRepository.DeleteRange(user.CompanyUsers);
-
-            List<CompanyUser> companyUsers = request.CompanyIds!.Select(companyId => new CompanyUser
-            {
-                CompanyId = Guid.Parse(companyId),
-                AppUserId = user.Id
-            }).ToList();
-
-            await companyUserRepository.AddRangeAsync(companyUsers);
-            await unitOfWork.SaveChangesAsync(cancellationToken);
-        }
-
-        cacheService.Remove("users");
-
-        return DomainResult.Success("User updated successfully");
+        await UpdateUserCompanyRelationsAsync(user, request.CompanyIds, cancellationToken);
+        CacheService.Remove(UsersMessages.Cache);
+        return DomainResult.Success(UsersMessages.Updated);
     }
+
+    private async Task<IDomainResult<string>> UpdateUserAsync(AppUser user, CancellationToken cancellationToken)
+    {
+        var identityResult = await _userManager.UpdateAsync(user);
+        return identityResult.Succeeded
+            ? DomainResult.Success(String.Empty)
+            : DomainResult.Failed<string>(identityResult.Errors.Select(e => e.Description).ToList());
+    }
+
+    private async Task<IDomainResult<string>> UpdatePasswordAsync(AppUser user, string? newPassword, CancellationToken cancellationToken)
+    {
+        if (newPassword is not null)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var identityResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+            return identityResult.Succeeded
+                ? DomainResult.Success(String.Empty)
+                : DomainResult.Failed<string>(identityResult.Errors.Select(e => e.Description).ToList());
+        }
+
+        return DomainResult.Success(String.Empty);
+    }
+
+    private async Task UpdateUserCompanyRelationsAsync(AppUser user, List<string> companyIds, CancellationToken cancellationToken)
+    {
+        if (companyIds is null || !companyIds.Any()) return;
+
+        _companyUserRepository.DeleteRange(user.CompanyUsers);
+
+        var companyUsers = companyIds.Select(companyId => new CompanyUser
+        {
+            CompanyId = Guid.Parse(companyId),
+            AppUserId = user.Id
+        }).ToList();
+
+        await _companyUserRepository.AddRangeAsync(companyUsers);
+        await UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
 }

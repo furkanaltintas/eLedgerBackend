@@ -1,6 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Handlers.Partners;
+using Application.Common.Interfaces;
+using Application.Features.Users.Constants;
 using Application.Features.Users.Queries;
-using Domain.Entities;
+using Domain.Entities.Partners;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -8,26 +10,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Handlers;
 
-class GetAllUsersQueryHandler(
-    UserManager<AppUser> userManager,
-    ICacheService cacheService) : IRequestHandler<GetAllUsersQuery, IDomainResult<List<AppUser>>>
+internal sealed class GetAllUsersQueryHandler : ApplicationCacheableQueryHandlerBase, IRequestHandler<GetAllUsersQuery, IDomainResult<List<AppUser>>>
 {
+    private readonly UserManager<AppUser> _userManager;
+    public GetAllUsersQueryHandler(ICacheService cacheService, UserManager<AppUser> userManager) : base(cacheService)
+    {
+        _userManager = userManager;
+    }
+
     public async Task<IDomainResult<List<AppUser>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {
-        List<AppUser> users;
-
-        users = cacheService.Get<List<AppUser>>("users");
-        if (users is null)
+        List<AppUser> users = await GetOrSetCacheAsync(UsersMessages.Cache, async () =>
         {
-            users = await userManager.Users
-                .Include(u => u.CompanyUsers)!
-                .ThenInclude(cu => cu.Company)
-                .OrderBy(u => u.FirstName)
-                .ThenBy(u => u.LastName)
-                .ToListAsync(cancellationToken);
-
-            cacheService.Set("users", users);
-        }
+            return await _userManager.Users.Include(u => u.CompanyUsers)!
+                                           .ThenInclude(cu => cu.Company)
+                                           .OrderBy(u => u.FirstName)
+                                           .ThenBy(u => u.LastName)
+                                           .ToListAsync(cancellationToken);
+        });
 
         return DomainResult.Success(users);
     }

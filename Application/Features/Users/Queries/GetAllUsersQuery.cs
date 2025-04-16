@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Partners;
 using DomainResults.Common;
 using MediatR;
 
 namespace Application.Features.Users.Queries;
 
-public record GetAllUsersQuery() : IRequest<IDomainResult<List<AppUser>>>;
+public sealed record GetAllUsersQuery() : IRequest<IDomainResult<List<AppUser>>>;

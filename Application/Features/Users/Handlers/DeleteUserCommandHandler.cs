@@ -1,29 +1,29 @@
 ﻿using Application.Common.Interfaces;
 using Application.Features.Users.Commands;
-using Domain.Entities;
+using Application.Features.Users.Constants;
+using Application.Features.Users.Rules;
+using Domain.Entities.Partners;
 using DomainResults.Common;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.Users.Handlers;
 
-class DeleteUserCommandHandler(
+internal sealed class DeleteUserCommandHandler(
     UserManager<AppUser> userManager,
-    ICacheService cacheService) : IRequestHandler<DeleteUserCommand, IDomainResult<string>>
+    ICacheService cacheService,
+    UserRules userRules) : IRequestHandler<DeleteUserCommand, IDomainResult<string>>
 {
     public async Task<IDomainResult<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        AppUser? user = await userManager.FindByIdAsync(request.Id.ToString());
-        if (user is null) return DomainResult<string>.NotFound("User not found");
-
+        AppUser? user = await userRules.GetByIdAsync(request.Id, cancellationToken);
+        if (user is null) return DomainResult<string>.NotFound(UsersMessages.NotFound);
         user.IsDeleted = true;
 
         IdentityResult identityResult = await userManager.UpdateAsync(user);
         if (!identityResult.Succeeded) return DomainResult<string>.Failed(identityResult.Errors.Select(e => e.Description).ToList());
 
-        cacheService.Remove("users");
-
-        return DomainResult.Success("User deleted successfully");
+        cacheService.Remove(UsersMessages.Cache);
+        return DomainResult.Success(UsersMessages.Deleted);
     }
 }
-
