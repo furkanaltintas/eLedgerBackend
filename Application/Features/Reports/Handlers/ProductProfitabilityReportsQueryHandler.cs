@@ -1,6 +1,6 @@
 ﻿using Application.Features.Reports.Queries;
 using Application.Features.Reports.Responses;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Reports.Handlers;
 
-sealed class ProductProfitabilityReportsQueryHandler(IProductRepository productRepository) : IRequestHandler<ProductProfitabilityReportsQuery, IDomainResult<List<ProductProfitabilityReportsQueryResponse>>>
+internal sealed class ProductProfitabilityReportsQueryHandler(IProductRepository productRepository) : IRequestHandler<ProductProfitabilityReportsQuery, IDomainResult<List<ProductProfitabilityReportsQueryResponse>>>
 {
     public async Task<IDomainResult<List<ProductProfitabilityReportsQueryResponse>>> Handle(ProductProfitabilityReportsQuery request, CancellationToken cancellationToken)
     {
@@ -22,14 +22,14 @@ sealed class ProductProfitabilityReportsQueryHandler(IProductRepository productR
 
         foreach (var product in products)
         {
-            decimal depositPriceSum = product.Details!.Where(p => p.Deposit > 0).Sum(p => p.Price);
-            int depositCount = product.Details!.Where(p => p.Deposit > 0).Count();
+            Decimal depositPriceSum = product.Details!.Where(p => p.Deposit > 0).Sum(p => p.Price);
+            Int64 depositCount = product.Details!.Where(p => p.Deposit > 0).Count();
 
-            decimal withdrawalPriceSum = product.Details!.Where(p => p.Withdrawal > 0).Sum(p => p.Price);
-            int withdrawalCount = product.Details!.Where(p => p.Withdrawal > 0).Count();
+            Decimal withdrawalPriceSum = product.Details!.Where(p => p.Withdrawal > 0).Sum(p => p.Price);
+            Int64 withdrawalCount = product.Details!.Where(p => p.Withdrawal > 0).Count();
 
-            decimal depositPrice = depositPriceSum > 0 || depositCount > 0 ? depositPriceSum / depositCount : 0;
-            decimal withdrawalPrice = withdrawalPriceSum > 0 || withdrawalCount > 0 ? withdrawalPriceSum / withdrawalCount : 0;
+            Decimal depositPrice = depositPriceSum > 0 || depositCount > 0 ? depositPriceSum / depositCount : 0;
+            Decimal withdrawalPrice = withdrawalPriceSum > 0 || withdrawalCount > 0 ? withdrawalPriceSum / withdrawalCount : 0;
 
             ProductProfitabilityReportsQueryResponse data = new()
             {

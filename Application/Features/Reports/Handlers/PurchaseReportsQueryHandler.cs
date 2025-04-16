@@ -1,7 +1,8 @@
 ﻿using Application.Common.Interfaces;
+using Application.Features.Reports.Constants;
 using Application.Features.Reports.Queries;
 using Application.Features.Reports.Responses;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Enums;
 using Domain.Interfaces;
 using DomainResults.Common;
@@ -10,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Reports.Handlers;
 
-sealed class PurchaseReportsQueryHandler(
+internal sealed class PurchaseReportsQueryHandler(
     IInvoiceRepository invoiceRepository,
     ICompanyContextHelper companyContextHelper): IRequestHandler<PurchaseReportsQuery, IDomainResult<PurchaseReportsQueryResponse>>
 {
     public async Task<IDomainResult<PurchaseReportsQueryResponse>> Handle(PurchaseReportsQuery request, CancellationToken cancellationToken)
     {
-        PurchaseReportsQueryResponse response = companyContextHelper.GetCompanyFromContext<PurchaseReportsQueryResponse>("purchase_reports");
+        PurchaseReportsQueryResponse response = companyContextHelper.GetCompanyFromContext<PurchaseReportsQueryResponse>(ReportsMessages.Cache);
 
         if(response is null)
         {
@@ -31,7 +32,7 @@ sealed class PurchaseReportsQueryHandler(
                 Amounts = invoices.GroupBy(i => i.Date).Select(i => i.Sum(i => i.Amount)).ToList()
             };
 
-            companyContextHelper.SetCompanyInContext("purchase_reports", response);
+            companyContextHelper.SetCompanyInContext(ReportsMessages.Cache, response);
         }
 
         return DomainResult.Success(response);
