@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Application.Features.Customers.Commands;
 
-public record DeleteCustomerCommand(Guid Id) : IRequest<IDomainResult<string>>;
+public sealed record DeleteCustomerCommand(Guid Id) : IRequest<IDomainResult<string>>;

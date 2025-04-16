@@ -1,6 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Handlers.Companies;
+using Application.Common.Interfaces;
 using Application.Features.Customers.Commands;
-using Domain.Entities;
+using Application.Features.Customers.Constants;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
@@ -8,23 +10,20 @@ using MediatR;
 
 namespace Application.Features.Customers.Handlers;
 
-class UpdateCustomerCommandHandler(
-    ICustomerRepository customerRepository,
-    IUnitOfWorkCompany unitOfWorkCompany,
-    IMapper mapper,
-    ICompanyContextHelper companyContextHelper) : IRequestHandler<UpdateCustomerCommand, IDomainResult<string>>
+class UpdateCustomerCommandHandler : CompanyCommandHandlerBase, IRequestHandler<UpdateCustomerCommand, IDomainResult<string>>
 {
+    private readonly ICustomerRepository _customerRepository;
+    public UpdateCustomerCommandHandler(IUnitOfWorkCompany unitOfWorkCompany, ICompanyContextHelper companyContextHelper, IMapper mapper, ICustomerRepository customerRepository) : base(unitOfWorkCompany, companyContextHelper, mapper)
+    {
+        _customerRepository = customerRepository;
+    }
+
     public async Task<IDomainResult<string>> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
-        Customer? customer = await customerRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.Id, cancellationToken);
-        if (customer is null) return DomainResult<string>.NotFound("Customer not found.");
+        Customer customer = await _customerRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.Id, cancellationToken);
+        if (customer is null) return DomainResult<string>.NotFound(CustomersMessages.NotFound);
 
-        mapper.Map(request, customer);
-
-        await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
-
-        companyContextHelper.RemoveCompanyFromContext("customers");
-
-        return DomainResult.Success("Customer updated successfully.");
+        Mapper.Map(request, customer);
+        return await SuccessAsync(new[] { CustomersMessages.Cache }, CustomersMessages.Updated, cancellationToken);
     }
 }

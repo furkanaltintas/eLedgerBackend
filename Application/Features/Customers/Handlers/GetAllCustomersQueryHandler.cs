@@ -1,26 +1,31 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Handlers.Companies;
+using Application.Common.Interfaces;
+using Application.Features.Customers.Constants;
 using Application.Features.Customers.Queries;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
+using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Customers.Handlers;
 
-class GetAllCustomersQueryHandler(
-    ICustomerRepository customerRepository,
-    ICompanyContextHelper companyContextHelper) : IRequestHandler<GetAllCustomersQuery, IDomainResult<List<Customer>>>
+class GetAllCustomersQueryHandler : CompanyQueryHandlerBase, IRequestHandler<GetAllCustomersQuery, IDomainResult<List<Customer>>>
 {
+    private readonly ICustomerRepository _customerRepository;
+    public GetAllCustomersQueryHandler(ICompanyContextHelper companyContextHelper, IMapper mapper, ICustomerRepository customerRepository) : base(companyContextHelper, mapper)
+    {
+        _customerRepository = customerRepository;
+    }
+
     public async Task<IDomainResult<List<Customer>>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
     {
-        List<Customer> customers = companyContextHelper.GetCompanyFromContext<List<Customer>>("customers");
-        if (customers is null)
+        return await GetOrSetCacheAsync(CustomersMessages.Cache, async () =>
         {
-            customers = await customerRepository.GetAll().OrderBy(c => c.Name).ToListAsync(cancellationToken);
-            companyContextHelper.SetCompanyInContext("customers", customers);
-        }
-
-        return DomainResult.Success(customers);
+            return await _customerRepository.GetAll()
+                                            .OrderBy(c => c.Name)
+                                            .ToListAsync(cancellationToken);
+        });
     }
 }

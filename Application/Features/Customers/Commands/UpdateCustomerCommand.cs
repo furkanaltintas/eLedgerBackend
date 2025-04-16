@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Features.Customers.Commands;
 
-public record UpdateCustomerCommand(
+public sealed record UpdateCustomerCommand(
     Guid Id,
     string Name,
     int TypeValue,
