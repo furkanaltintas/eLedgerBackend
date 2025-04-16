@@ -1,6 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Handlers.Companies;
+using Application.Common.Interfaces;
+using Application.Features.Products.Constants;
 using Application.Features.Products.Queries;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
@@ -8,20 +10,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Products.Handlers;
 
-sealed class GetAllProductsQueryHandler(
-    IProductRepository productRepository,
-    ICompanyContextHelper companyContextHelper) : IRequestHandler<GetAllProductsQuery, IDomainResult<List<Product>>>
+internal sealed class GetAllProductsQueryHandler : CompanyCacheableQueryHandlerBase, IRequestHandler<GetAllProductsQuery, IDomainResult<List<Product>>>
 {
+    private readonly IProductRepository _productRepository;
+    public GetAllProductsQueryHandler(ICompanyContextHelper companyContextHelper, IProductRepository productRepository) : base(companyContextHelper)
+    {
+        _productRepository = productRepository;
+    }
+
     public async Task<IDomainResult<List<Product>>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
-        List<Product>? products = companyContextHelper.GetCompanyFromContext<List<Product>>("products");
-        if(products is null)
+        return await Success(ProductsMessages.Cache, async () =>
         {
-            products = await productRepository.GetAll().OrderBy(p => p.Name).ToListAsync(cancellationToken);
-            companyContextHelper.SetCompanyInContext("products", products);
-        }
-
-        return DomainResult.Success(products);
+            return await _productRepository.GetAll()
+                                            .OrderBy(p => p.Name)
+                                            .ToListAsync(cancellationToken);
+        });
     }
 }
-
