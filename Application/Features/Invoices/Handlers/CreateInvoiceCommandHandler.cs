@@ -1,12 +1,12 @@
 ﻿using Application.Common.Interfaces;
+using Application.Features.Customers.Constants;
 using Application.Features.Invoices.Commands;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Enums;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Application.Features.Invoices.Handlers;
 
@@ -30,7 +30,7 @@ sealed class CreateInvoiceCommandHandler(
 
         #region Customer ve Detay kısmı
         Customer? customer = await customerRepository.GetByExpressionWithTrackingAsync(c => c.Id == request.CustomerId, cancellationToken);
-        if (customer is null) return DomainResult.Failed<string>("Müşteri bulunamadı");
+        if (customer is null) return DomainResult.Failed<string>(CustomersMessages.NotFound);
 
         customer.DepositAmount += request.TypeValue == 2 ? invoice.Amount : 0;
         customer.WithdrawalAmount += request.TypeValue == 1 ? invoice.Amount : 0;

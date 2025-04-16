@@ -1,7 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Handlers.Companies;
+using Application.Common.Interfaces;
+using Application.Features.Invoices.Constants;
 using Application.Features.Invoices.Queries;
-using Domain.Entities;
-using Domain.Enums;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
@@ -9,29 +10,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Invoices.Handlers;
 
-sealed class GetAllInvoicesQueryHandler(
-    IInvoiceRepository invoiceRepository,
-    ICompanyContextHelper companyContextHelper) : IRequestHandler<GetAllInvoicesQuery, IDomainResult<List<Invoice>>>
+internal sealed class GetAllInvoicesQueryHandler: CompanyCacheableQueryHandlerBase, IRequestHandler<GetAllInvoicesQuery, IDomainResult<List<Invoice>>>
 {
+    private readonly IInvoiceRepository _invoiceRepository;
+
+    public GetAllInvoicesQueryHandler(ICompanyContextHelper companyContextHelper, IInvoiceRepository invoiceRepository) : base(companyContextHelper)
+    {
+        _invoiceRepository = invoiceRepository;
+    }
+
     public async Task<IDomainResult<List<Invoice>>> Handle(GetAllInvoicesQuery request, CancellationToken cancellationToken)
     {
-        List<Invoice>? invoices;
-
-        invoices = companyContextHelper.GetCompanyFromContext<List<Invoice>>("invoices");
-
-        if (invoices is null)
+        return await Success(InvoicesMessages.Cache, async () =>
         {
-            invoices = await invoiceRepository
-                .GetAll()
-                .Include(i => i.Customer)
-                .Include(i => i.Details!)
-                .ThenInclude(i => i.Product)
-                .OrderBy(i => i.Date)
-                .ToListAsync(cancellationToken);
-
-            companyContextHelper.SetCompanyInContext("invoices", invoices);
-        }
-
-        return DomainResult.Success(invoices);
+            return await _invoiceRepository.GetAll()
+                                    .Include(i => i.Customer)
+                                    .Include(i => i.Details!)
+                                    .ThenInclude(i => i.Product)
+                                    .OrderBy(i => i.Date)
+                                    .ToListAsync(cancellationToken);    
+        });
     }
 }

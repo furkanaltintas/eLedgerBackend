@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Features.Invoices.Commands;
-using Domain.Entities;
+using Application.Features.Invoices.Constants;
+using Domain.Entities.Companies;
 using Domain.Enums;
 using Domain.Interfaces;
 using DomainResults.Common;
@@ -22,7 +23,7 @@ sealed class DeleteInvoiceCommandHandler(
     public async Task<IDomainResult<string>> Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)
     {
         Invoice? invoice = await invoiceRepository.Where(i => i.Id == request.Id).Include(i => i.Details).FirstOrDefaultAsync(cancellationToken);
-        if (invoice is null) return DomainResult.NotFound<string>("Fatura bulunamadı");
+        if (invoice is null) return DomainResult.NotFound<string>(InvoicesMessages.NotFound);
 
         CustomerDetail? customerDetail = await customerDetailRepository.Where(c => c.InvoiceId == request.Id).FirstOrDefaultAsync(cancellationToken);
         if (customerDetail is not null) customerDetailRepository.Delete(customerDetail);
