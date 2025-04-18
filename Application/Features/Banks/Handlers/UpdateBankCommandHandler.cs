@@ -3,7 +3,7 @@ using Application.Common.Interfaces;
 using Application.Features.Banks.Commands;
 using Application.Features.Banks.Constants;
 using Application.Features.Banks.Rules;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;

@@ -23,7 +23,6 @@
   <ItemGroup>
     <Folder Include="Common\Exceptions\" />
     <Folder Include="Common\Models\" />
-    <Folder Include="Constants\" />
     <Folder Include="Features\BankDetails\Validators\" />
     <Folder Include="Features\Banks\Validators\" />
     <Folder Include="Features\CashRegisterDetails\Constants\" />
@@ -33,22 +32,13 @@
     <Folder Include="Features\CashRegisters\Validators\" />
     <Folder Include="Features\Companies\Responses\" />
     <Folder Include="Features\Companies\Validators\" />
-    <Folder Include="Features\CustomerDetails\Constants\" />
-    <Folder Include="Features\Customers\Constants\" />
     <Folder Include="Features\Customers\Responses\" />
     <Folder Include="Features\Customers\Validators\" />
-    <Folder Include="Features\Invoices\Constants\" />
     <Folder Include="Features\Invoices\Responses\" />
     <Folder Include="Features\Invoices\Validators\" />
-    <Folder Include="Features\ProductDetails\Constants\" />
-    <Folder Include="Features\ProductDetails\Responses\" />
-    <Folder Include="Features\Products\Constants\" />
     <Folder Include="Features\Products\Responses\" />
     <Folder Include="Features\Products\Validators\" />
-    <Folder Include="Features\Reports\Commands\" />
-    <Folder Include="Features\Reports\Constants\" />
     <Folder Include="Features\Reports\Validators\" />
-    <Folder Include="Features\Users\Constants\" />
     <Folder Include="Features\Users\Responses\" />
     <Folder Include="Features\Users\Validators\" />
     <Folder Include="Features\_Example\Constants\" />

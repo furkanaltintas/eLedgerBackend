@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Companies;
 using Domain.Interfaces;
 
 namespace Application.Features.BankDetails.Rules;

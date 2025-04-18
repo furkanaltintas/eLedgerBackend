@@ -1,5 +1,5 @@
 ﻿using Application.Features.Auth.Login;
-using Domain.Entities;
+using Domain.Entities.Partners;
 
 namespace Application.Common.Interfaces;
 

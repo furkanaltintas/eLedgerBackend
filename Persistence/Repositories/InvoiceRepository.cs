@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Companies;
 using Domain.Interfaces;
 using GenericRepository;
 using Persistence.Context;

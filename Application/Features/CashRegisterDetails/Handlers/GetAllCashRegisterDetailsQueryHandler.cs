@@ -1,5 +1,5 @@
 ﻿using Application.Features.CashRegisterDetails.Queries;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;

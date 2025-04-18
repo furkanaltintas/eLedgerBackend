@@ -5,7 +5,8 @@ using Application.Features.BankDetails.Constants;
 using Application.Features.BankDetails.Rules;
 using Application.Features.Banks.Constants;
 using Application.Features.Banks.Rules;
-using Domain.Entities;
+using Application.Features.CashRegisters.Constants;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;
@@ -46,6 +47,6 @@ class UpdateBankDetailCommandHandler : BaseCommandHandler, IRequestHandler<Updat
         bankDetail.Description = request.Description;
         bankDetail.Date = request.Date;
 
-        return Success(new[] { BanksMessages.Cache, CashRegistersMessages.Cache }, BankDetailsMessages.Updated, cancellationToken);
+        return await Success(new[] { BanksMessages.Cache, CashRegistersMessages.Cache }, BankDetailsMessages.Updated, cancellationToken);
     }
 }

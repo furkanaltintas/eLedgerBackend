@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities;
+using Domain.Entities.Partners;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;

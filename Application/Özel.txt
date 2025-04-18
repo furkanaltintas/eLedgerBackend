@@ -1,0 +1,4 @@
+﻿CashRegisters kısmında kaldık.
+
+En son companies kısmı yapıldı.
+En sondan başlandı güncelleme işlemlerine.

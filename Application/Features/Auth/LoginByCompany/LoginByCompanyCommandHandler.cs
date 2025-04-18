@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Features.Auth.Login;
-using Domain.Entities;
+using Domain.Entities.Partners;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;

@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Partners;
 using Domain.Interfaces;
 using GenericRepository;
 using Persistence.Context;

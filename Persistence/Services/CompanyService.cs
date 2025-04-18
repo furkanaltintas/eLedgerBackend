@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities;
+using Domain.Entities.Partners;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 

@@ -3,7 +3,7 @@ using Application.Features.CashRegisters.Commands;
 using Application.Features.Customers.Commands;
 using Application.Features.Invoices.Commands;
 using Domain.Dtos;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Enums;
 using Mapster;
 

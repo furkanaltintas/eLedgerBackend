@@ -1,5 +1,6 @@
 ﻿using Application.Features.BankDetails.Queries;
-using Domain.Entities;
+using Application.Features.CashRegisters.Constants;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
@@ -17,7 +18,7 @@ class GetAllBankDetailsQueryHandler(
             .Include(c => c.Details!.Where(crd => crd.Date >= request.StartDate && crd.Date <= request.EndDate))
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (bank is null) return DomainResult<Bank>.NotFound("Cash register not found.");
+        if (bank is null) return DomainResult<Bank>.NotFound(CashRegistersMessages.NotFound);
         return DomainResult.Success(bank);
     }
 }

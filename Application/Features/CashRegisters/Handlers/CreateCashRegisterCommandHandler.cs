@@ -3,7 +3,7 @@ using Application.Common.Interfaces;
 using Application.Features.CashRegisters.Commands;
 using Application.Features.CashRegisters.Constants;
 using Application.Features.CashRegisters.Rules;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MapsterMapper;

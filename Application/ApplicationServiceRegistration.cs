@@ -1,6 +1,6 @@
 ﻿using Application.Common.Mapping;
 using Application.Features.Banks.Rules;
-using Domain.Entities;
+using Domain.Entities.Partners;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;

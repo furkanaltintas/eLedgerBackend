@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Features.CashRegisterDetails.Commands;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;

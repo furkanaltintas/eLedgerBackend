@@ -2,7 +2,8 @@
 using Application.Features.BankDetails.Commands;
 using Application.Features.BankDetails.Constants;
 using Application.Features.Banks.Constants;
-using Domain.Entities;
+using Application.Features.CashRegisters.Constants;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
@@ -106,7 +107,7 @@ class CreateBankDetailCommandHandler(
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
-        companyContextHelper.RemoveRangeCompanyFromContext(new[] { BanksMessages.Cache, CashRegisters.Cache, CustomersMessages.Cache });
+        companyContextHelper.RemoveRangeCompanyFromContext(new[] { BanksMessages.Cache, CashRegistersMessages.Cache, CustomersMessages.Cache });
 
         return DomainResult.Success(BankDetailsMessages.Created);
     }

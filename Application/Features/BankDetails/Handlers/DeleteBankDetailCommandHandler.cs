@@ -4,7 +4,7 @@ using Application.Features.BankDetails.Constants;
 using Application.Features.BankDetails.Rules;
 using Application.Features.Banks.Constants;
 using Application.Features.Banks.Rules;
-using Domain.Entities;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using DomainResults.Common;
 using MediatR;
